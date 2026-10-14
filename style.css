@@ -8,6 +8,7 @@
 - VERDE 6: 131,142,87
 - BLANCO: 198,199,166
 */
+
 @font-face {
     font-family: "Titulos";
     src: url("./recursos/fuentes/Pixelify_Sans/PixelifySans-VariableFont_wght.ttf");
@@ -46,9 +47,6 @@ header{
     text-align: center;
     align-items: center;
 }
-
-
-
 #nombre-negocio{
     text-align: left;
     
@@ -122,7 +120,7 @@ header{
     display: flex;
 }
 
-/* ESTILOS MAIN*/
+/* ESTILOS MAIN INICIO*/
 
 
 #sobre-nosotros{
@@ -150,6 +148,29 @@ header{
     font-family: "Titulos";
 }
 
+
+/* ESTILOS MAIN CARRITO */
+#carrito h2{
+    font-family: "Titulos";
+    text-align: center;
+    margin:10px;
+}
+#items-carrito{
+    min-height: 10vh;
+    background-color: rgb(198,199,166);
+    margin-left: 50px;
+    margin-right: 50px;
+    border-radius: 12px;
+}
+
+#tabla-carrito{
+    text-align: center;
+    margin:10px;
+}
+
+#total-carrito{
+    background-color: rgb(131,142,87);
+}
 /* ESTILOS FOOTER */
 
 footer{
@@ -180,3 +201,5 @@ footer{
 #informacion p{
     margin: 5px
 }
+
+

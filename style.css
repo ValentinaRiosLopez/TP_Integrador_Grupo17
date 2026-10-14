@@ -1,0 +1,120 @@
+/* PALETA DE COLORES*/
+/*
+- VERDE 1: 15,24,10
+- VERDE 2: 31,45,19
+- VERDE 3: 56,73,41
+- VERDE 4: 55,70,15
+- VERDE 5: 90,106,49
+- VERDE 6: 131,142,87
+- BLANCO: 198,199,166
+*/
+@font-face {
+    font-family: "Titulos";
+    src: url("./recursos/fuentes/Pixelify_Sans/PixelifySans-VariableFont_wght.ttf");
+}
+
+@font-face {
+    font-family: "Texto";
+    src: url("./recursos/fuentes/Atkinson_Hyperlegible_Mono/AtkinsonHyperlegibleMono-VariableFont_wght.ttf");
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+    color:rgb(198,199,166); /*BLANCO*/
+    font-family: "Texto";
+}
+
+body{
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: rgb(90,106,49); /*VERDE 5*/
+    
+    
+}
+/* ESTILOS HEADER */
+
+header{
+    display: grid;
+    background-color: rgb(31,45,19); /*VERDE 2*/
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 2fr 1fr;
+    text-align: center;
+    align-items: center;
+}
+
+
+
+#nombre-negocio{
+    text-align: left;
+    
+}
+
+#nombre-negocio h1{
+    font-family: "Titulos";
+}
+#nombre-negocio h5{
+    font-family: "Texto";
+}
+
+#imagen-logo{
+    max-width: 100%;
+}
+
+#imagen-logo img{
+    max-width: 40%;
+}
+
+/* ESTILOS MENU */
+
+#contenedor-menu {
+    grid-column: 1 / 3;
+    width: 100%;
+    align-self: self-end;
+}
+
+#contenedor-menu nav{
+    width: 100%;
+}
+
+#contenedor-menu a{
+    display: block;
+    padding: 10px;
+    text-align:center;
+    font-family: "Titulos";
+}
+
+#menu-principal{
+    display: flex;
+    width: 100%;
+}
+
+#menu-principal li{
+    position: relative;
+    width: 25%;
+}
+
+#menu-principal li:hover{
+    background-color: rgb(15,24,10); /*VERDE 1*/
+}
+
+#menu-secundario{
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+#menu-secundario li{
+    width: 100%;
+    background-color: rgb(31,45,19);
+}
+
+#menu-principal li:hover > #menu-secundario{
+    display: block;
+}

@@ -30,10 +30,11 @@
 
 body{
     max-width: 1200px;
+    min-height: 100vh;
     margin: 0 auto;
+    display:grid;
+    grid-template-rows: auto 1fr auto;
     background-color: rgb(90,106,49); /*VERDE 5*/
-    
-    
 }
 /* ESTILOS HEADER */
 
@@ -58,6 +59,7 @@ header{
 }
 #nombre-negocio h5{
     font-family: "Texto";
+    margin-left: 10px;
 }
 
 #imagen-logo{
@@ -73,7 +75,7 @@ header{
 #contenedor-menu {
     grid-column: 1 / 3;
     width: 100%;
-    align-self: self-end;
+    align-self: end;
 }
 
 #contenedor-menu nav{
@@ -94,7 +96,7 @@ header{
 
 #menu-principal li{
     position: relative;
-    width: 25%;
+    flex: 1;
 }
 
 #menu-principal li:hover{
@@ -108,6 +110,7 @@ header{
     left: 0;
     width: 100%;
     z-index: 10;
+    flex-direction: column;
 }
 
 #menu-secundario li{
@@ -115,6 +118,65 @@ header{
     background-color: rgb(31,45,19);
 }
 
-#menu-principal li:hover > #menu-secundario{
-    display: block;
+#menu-principal li:hover #menu-secundario{
+    display: flex;
+}
+
+/* ESTILOS MAIN*/
+
+
+#sobre-nosotros{
+    text-align: center;
+    margin: 10px;
+}
+
+#sobre-nosotros h3{
+    font-family: "Titulos";
+}
+
+#sobre-nosotros p{
+    font-size: 12px;
+}
+
+#sobre-nosotros:hover{
+    background-color: rgb(56,73,41);
+}
+
+#productos-destacados{
+    text-align: center;
+}
+
+#productos-destacados h2{
+    font-family: "Titulos";
+}
+
+/* ESTILOS FOOTER */
+
+footer{
+    background-color:  rgb(31,45,19);
+    align-self: end;
+    align-items: center;
+}
+
+#info-contacto{
+    text-align: left;
+    margin: 20px;
+    
+}
+
+#info-contacto h3{
+    text-align: left;
+    font-family: "Titulos";
+}
+
+#informacion{
+    text-align: left;
+    margin: 15px;
+    font-family: "Texto";
+    font-size: 12px;  
+    align-content: space-around;
+}
+
+#informacion p{
+    margin: 5px
 }

@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "nombre": "Monopoly",
+    "descripcion": "Descubre el clásico juego de mesa Monopoly, una experiencia de entretenimiento que ha cautivado a generaciones. Diseñado por Hasbro, este juego es ideal para disfrutar en familia o con amigos, permitiendo que de 2 a 6 jugadores se sumerjan en un mundo de estrategia y negociación. Con un tiempo de juego que varía entre 60 y 120 minutos, cada partida promete ser única y emocionante.",
+    "precio": 54995,
+    "imagen": "https://acdn-us.mitiendanube.com/stores/003/673/840/products/5eab1f7786d3b_image_name-fdc618f6ed5818e4cd16963571902060-1024-1024.webp",
+    "tipo": "juego de mesa"
+  },
+  {
+    "id": 2,
+    "nombre": "Scrabble",
+    "descripcion": "¿Se considera un escritor de palabras? Pruebe su suerte en uno de los mejores juegos de mesa de todos tiempo, Scrabble, interpretado por millones en todo el mundo. Este juego de tablero le permite construir palabras, puntos de puntuación y utilizar espacios valiosos a su ventaja. Ideal para 2 a 4 jugadores. Se recomienda para los 10 años o más.",
+    "precio": 22730,
+    "imagen": "https://acdn-us.mitiendanube.com/stores/003/673/840/products/5ef21105f1f32_image_name-6e961c945190378e7016963449230620-1024-1024.webp",
+    "tipo": "juego de mesa"
+  },
+  {
+    "id": 3,
+    "nombre": "Catan",
+    "descripcion": "Catan es un juego de mesa para toda la familia que se ha convertido en un fenómeno mundial. Se trata de un juego que aúna la estrategia, la astucia y la capacidad para negociar y en el que los jugadores tratan de colonizar una isla, Catán, rica en recursos naturales. Construyendo pueblos, estableciendo rutas comerciales, etc. Ideal para 3 a 4 jugadores. Se recomienda para los 10 años o más.",
+    "precio": 64900,
+    "imagen": "https://devirinvestments.s3.eu-west-1.amazonaws.com/img/catalog/product/8436017220100-1200-face3d.jpg",
+    "tipo": "juego de mesa"
+  },
+  {
+    "id": 4,
+    "nombre": "Set De 7 Dados Para Rol Rosa",
+    "descripcion": "Set De 7 dados para rol translucidos de resina color rosa con números blancos.",
+    "precio": 10000,
+    "imagen": "https://http2.mlstatic.com/D_NQ_NP_741951-MLA117973704483_092026-OO.jpg",
+    "tipo": "dado"
+  },
+  {
+    "id": 5,
+    "nombre": "Dados Rol Runas Antiguas",
+    "descripcion": "Set De 7 dados para rol de plastico color negro con números y detalle rojos.",
+    "precio": 13000,
+    "imagen": "https://http2.mlstatic.com/D_NQ_NP_897006-MLA113564528097_062026-OO.jpg",
+    "tipo": "dado"
+  },
+  {
+    "id": 6,
+    "nombre": "Set de dados de rol - Verde Azul Glitter",
+    "descripcion": "Set De 7 dados para rol de resina color verde y azul con glitter, con números blancos.",
+    "precio": 12500,
+    "imagen": "https://acdn-us.mitiendanube.com/stores/117/811/products/dados-violeta-verde-rol-4d0db0a7938bcdd8e417452856257499-1024-1024.webp",
+    "tipo": "dado"
+  }
+]

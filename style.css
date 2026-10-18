@@ -238,6 +238,36 @@ header{
 #total-carrito{
     background-color: rgb(131,142,87);
 }
+
+/* ESTILOS PARFIL USUARIO */
+
+#panel-cliente{
+    text-align: center;
+    background-color: rgb(56,73,41);
+    width: 100%;
+    margin:20px;
+    padding: 10px;
+    border-radius: 12px;
+}
+
+#panel-cliente h3{
+    font-family: "Titulos";
+}
+
+#panel-cliente button{
+    color: rgb(31,45,19);
+    background-color: rgb(198,199,166);
+    border-radius: 5px;
+    border: 2px solid rgb(31,45,19);
+    padding: 2px;
+    margin:5px
+
+}
+
+#panel-cliente span{
+    font-family: "Titulos";
+}
+
 /* ESTILOS FOOTER */
 
 footer{

@@ -9,7 +9,6 @@ function guardarNombre(evento){
 
     if(nombre != ""){
         localStorage.setItem("nombreCliente", nombre);
-        $("nombre-cliente").appendChild(document.createTextNode(nombre));
         mostrarInicio();
     }else{
         $("error-nombre").style.display = "block";
@@ -24,7 +23,7 @@ function actualizarInicio(){
     if(nombre === null){
         mostrarFormularioNombre();    
     }else{
-        $("nombre-cliente").appendChild(document.createTextNode(nombre));
+        
         mostrarInicio();
     }
 }
@@ -44,6 +43,7 @@ function mostrarFormularioNombre(){
 }
 
 function mostrarInicio(){
+    $("nombre-cliente").appendChild(document.createTextNode(nombre));
     $("panel-ingreso").style.display = "none";
     $("panel-cliente").style.display = "block";
     $("inicio").style.display = "block";

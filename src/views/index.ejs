@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TP INTEGRADOR</title>
+    <link
+      rel="shortcut icon"
+      href="/recursos/imagenes/sin-imagen.jpg"
+      type="image/x-icon"
+    />
+    <link rel="stylesheet" href="/recursos/style.css" />
+  </head>
+  <body>
+    <%- include('reutilizables/header') %>
+    <main id="contenido">
+      <div id="panel-ingreso">
+        <h2>Bienvenido!!!</h2>
+        <div id="ingreso">
+          <div id="error-nombre">
+            <p>ERROR Debe ingresar un nombre</p>
+          </div>
+          <label>Ingrese su nombre: </label>
+          <input type="text" id="txt-nombre" />
+          <button id="btn-ingreso">Aceptar</button>
+        </div>
+      </div>
+
+      <div id="panel-cliente">
+        <h3>Hola <span id="nombre-cliente"></span>!!!</h3>
+        <button id="btn-salir">Salir</button>
+      </div>
+
+      <div id="inicio">
+        <section id="sobre-nosotros">
+          <h3>Sobre Nosotros</h3>
+          <p>
+            Descripcion de la tienda.Lorem ipsum dolor sit amet consectetur
+            adipiscing, elit venenatis eleifend facilisis sociis aliquam
+            feugiat, metus placerat dignissim urna pellentesque.
+          </p>
+        </section>
+        <div id="productos-destacados">
+          <h2>PRODUCTOS DESTACADOS</h2>
+        </div>
+      </div>
+    </main>
+    <%- include('reutilizables/footer') %>
+    <script src="main.js"></script>
+  </body>
+</html>

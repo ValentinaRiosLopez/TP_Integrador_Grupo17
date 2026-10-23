@@ -1,0 +1,27 @@
+{
+  "name": "tp_integrador_grupo17",
+  "version": "1.0.0",
+  "description": "Trabajo practico programacion 3 2026 - Grupo 17 - Valentina Rios Lopez - Facundo Rodriguez Ventura",
+  "homepage": "https://github.com/ValentinaRiosLopez/TP_Integrador_Grupo17#readme",
+  "bugs": {
+    "url": "https://github.com/ValentinaRiosLopez/TP_Integrador_Grupo17/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ValentinaRiosLopez/TP_Integrador_Grupo17.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "ejs": "^7.0.2",
+    "express": "^5.3.0",
+    "nodemon": "^3.1.14",
+    "sequelize": "^6.37.8"
+  }
+}

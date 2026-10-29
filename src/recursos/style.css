@@ -10,292 +10,197 @@
 */
 
 @font-face {
-    font-family: "Titulos";
-    src: url("./fuentes/Pixelify_Sans/PixelifySans-VariableFont_wght.ttf");
+  font-family: "Titulos";
+  src: url("./fuentes/Pixelify_Sans/PixelifySans-VariableFont_wght.ttf");
 }
 
 @font-face {
-    font-family: "Texto";
-    src: url("./fuentes/Atkinson_Hyperlegible_Mono/AtkinsonHyperlegibleMono-VariableFont_wght.ttf");
+  font-family: "Texto";
+  src: url("./fuentes/Atkinson_Hyperlegible_Mono/AtkinsonHyperlegibleMono-VariableFont_wght.ttf");
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    text-decoration: none;
-    list-style: none;
-    color:rgb(198,199,166); /*BLANCO*/
-    font-family: "Texto";
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  list-style: none;
+  color: rgb(198, 199, 166); /*BLANCO*/
+  font-family: "Texto";
 }
 
-body{
-    max-width: 1200px;
-    min-height: 100vh;
-    margin: 0 auto;
-    display:grid;
-    grid-template-rows: auto 1fr auto;
-    background-color: rgb(90,106,49); /*VERDE 5*/
+body {
+  max-width: 1200px;
+  min-height: 100vh;
+  margin: 0 auto;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background-color: rgb(90, 106, 49); /*VERDE 5*/
 }
 /* ESTILOS HEADER */
 
-header{
-    display: grid;
-    background-color: rgb(31,45,19); /*VERDE 2*/
-    grid-template-columns: 1fr 2fr;
-    grid-template-rows: 2fr 1fr;
-    text-align: center;
-    align-items: center;
+header {
+  display: grid;
+  background-color: rgb(31, 45, 19); /*VERDE 2*/
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: 2fr 1fr;
+  text-align: center;
+  align-items: center;
 }
-#nombre-negocio{
-    text-align: left;
-    
-}
-
-#nombre-negocio h1{
-    font-family: "Titulos";
-}
-#nombre-negocio h5{
-    font-family: "Texto";
-    margin-left: 10px;
+#nombre-negocio {
+  text-align: left;
 }
 
-#imagen-logo{
-    max-width: 100%;
+#nombre-negocio h1 {
+  font-family: "Titulos";
 }
 
-#imagen-logo img{
-    max-width: 40%;
+#nombre-negocio h5 {
+  font-family: "Texto";
+}
+
+#imagen-logo {
+  max-width: 100%;
+}
+
+#imagen-logo img {
+  max-width: 40%;
 }
 
 /* ESTILOS MENU */
 
 #contenedor-menu {
-    grid-column: 1 / 3;
-    width: 100%;
-    align-self: end;
+  grid-column: 1 / 3;
+  width: 100%;
+  align-self: end;
 }
 
-#contenedor-menu nav{
-    width: 100%;
+#contenedor-menu nav {
+  width: 100%;
 }
 
-#contenedor-menu a{
-    display: block;
-    padding: 10px;
-    text-align:center;
-    font-family: "Titulos";
+#contenedor-menu a {
+  display: block;
+  padding: 10px;
+  text-align: center;
+  font-family: "Titulos";
 }
 
-#menu-principal{
-    display: flex;
-    width: 100%;
+#menu-principal {
+  display: flex;
+  width: 100%;
 }
 
-#menu-principal li{
-    position: relative;
-    flex: 1;
+#menu-principal li {
+  position: relative;
+  flex: 1;
 }
 
-#menu-principal li:hover{
-    background-color: rgb(15,24,10); /*VERDE 1*/
+#menu-principal li:hover {
+  background-color: rgb(15, 24, 10); /*VERDE 1*/
 }
 
-#menu-secundario{
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    z-index: 10;
-    flex-direction: column;
+#menu-secundario {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  flex-direction: column;
 }
 
-#menu-secundario li{
-    width: 100%;
-    background-color: rgb(31,45,19);
+#menu-secundario li {
+  width: 100%;
+  background-color: rgb(31, 45, 19);
 }
 
-#menu-principal li:hover #menu-secundario{
-    display: flex;
+#menu-principal li:hover #menu-secundario {
+  display: flex;
 }
 
 /* ESTILOS MAIN INICIO*/
 
-
-#sobre-nosotros{
-    text-align: center;
-    margin: 10px;
+#sobre-nosotros {
+  text-align: center;
+  margin: 10px;
 }
 
-#sobre-nosotros h3{
-    font-family: "Titulos";
+#sobre-nosotros h3 {
+  font-family: "Titulos";
 }
 
-#sobre-nosotros p{
-    font-size: 12px;
+#sobre-nosotros p {
+  font-size: 12px;
 }
 
-#sobre-nosotros:hover{
-    background-color: rgb(56,73,41);
+#sobre-nosotros:hover {
+  background-color: rgb(56, 73, 41);
 }
 
-#productos-destacados{
-    text-align: center;
+#productos-destacados {
+  text-align: center;
 }
 
-#productos-destacados h2{
-    font-family: "Titulos";
+#productos-destacados h2 {
+  font-family: "Titulos";
 }
 
-/* ESTILOS INGRESO */
-
-#panel-ingreso{
-    background-color: rgb(56,73,41);
-    width: 90%;
-    text-align: center;
-    display: grid;
-    justify-items: center;
-    justify-self: center;
-    margin: 20px;
-    border-radius: 12px;
-    
-}
-
-#panel-ingreso h2{
-    font-family: "Titulos";
-    margin: 15px;
-}
-
-#ingreso{
-    background-color: rgb(55,70,15);
-    display: grid;
-    grid-template-columns: 1fr;
-    justify-items: center;
-    row-gap: 10px;
-    font-size: 15px;
-    border: 3px solid rgb(31,45,19);
-    border-radius: 12px;
-    width: 50%;
-    margin: 15px;
-    padding: 15px;
-    
-}
-
-#ingreso input{
-    color: rgb(31,45,19);
-    font-size: 12px;
-    border-radius: 5px;
-    border: 2px solid rgb(31,45,19);
-    width: 100%;
-}
-
-#ingreso label{
-    width: 100%;
-}
-
-#ingreso button{
-    color: rgb(31,45,19);
-    background-color: rgb(198,199,166);
-    border-radius: 5px;
-    border: 2px solid rgb(31,45,19);
-    width: 90%;
-
-}
-
-#error-nombre{
-    display: none;
-    font-size: 10px;
-    background-color: darkred;
-    border: 2px solid rgb(61, 1, 1);
-    border-radius: 5px;
-    padding: 2px;
-}
-
-#li-ticket{
-    display: none;
-}
-
-/* ESTILOS MAIN CARRITO */
-#carrito h2{
-    font-family: "Titulos";
-    text-align: center;
-    margin:10px;
-}
-#items-carrito{
-    min-height: 10vh;
-    background-color: rgb(198,199,166);
-    margin-left: 50px;
-    margin-right: 50px;
-    border-radius: 12px;
-}
-
-#tabla-carrito{
-    text-align: center;
-    margin:10px;
-}
-
-#total-carrito{
-    background-color: rgb(131,142,87);
-}
 
 /* ESTILOS PARFIL USUARIO */
 
-#panel-cliente{
-    text-align: center;
-    background-color: rgb(56,73,41);
-    width: 100%;
-    margin:20px;
-    padding: 10px;
-    border-radius: 12px;
+#panel-cliente {
+  text-align: center;
+  background-color: rgb(56, 73, 41);
+  width: 100%;
+  margin: 20px;
+  padding: 10px;
+  border-radius: 12px;
 }
 
-#panel-cliente h3{
-    font-family: "Titulos";
+#panel-cliente h3 {
+  font-family: "Titulos";
 }
 
-#panel-cliente button{
-    color: rgb(31,45,19);
-    background-color: rgb(198,199,166);
-    border-radius: 5px;
-    border: 2px solid rgb(31,45,19);
-    padding: 2px;
-    margin:5px
-
+#panel-cliente button {
+  color: rgb(31, 45, 19);
+  background-color: rgb(198, 199, 166);
+  border-radius: 5px;
+  border: 2px solid rgb(31, 45, 19);
+  padding: 2px;
+  margin: 5px;
 }
 
-#panel-cliente span{
-    font-family: "Titulos";
+#panel-cliente span {
+  font-family: "Titulos";
 }
 
 /* ESTILOS FOOTER */
 
-footer{
-    background-color:  rgb(31,45,19);
-    align-self: end;
-    align-items: center;
+footer {
+  background-color: rgb(31, 45, 19);
+  align-self: end;
+  align-items: center;
 }
 
-#info-contacto{
-    text-align: left;
-    margin: 20px;
-    
+#info-contacto {
+  text-align: left;
+  margin: 20px;
 }
 
-#info-contacto h3{
-    text-align: left;
-    font-family: "Titulos";
+#info-contacto h3 {
+  text-align: left;
+  font-family: "Titulos";
 }
 
-#informacion{
-    text-align: left;
-    margin: 15px;
-    font-family: "Texto";
-    font-size: 12px;  
-    align-content: space-around;
+#informacion {
+  text-align: left;
+  margin: 15px;
+  font-family: "Texto";
+  font-size: 12px;
+  align-content: space-around;
 }
 
-#informacion p{
-    margin: 5px
+#informacion p {
+  margin: 5px;
 }
-

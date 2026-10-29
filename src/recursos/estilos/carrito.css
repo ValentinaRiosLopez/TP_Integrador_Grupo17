@@ -1,0 +1,23 @@
+
+/* ESTILOS MAIN CARRITO */
+#carrito h2 {
+  font-family: "Titulos";
+  text-align: center;
+  margin: 10px;
+}
+#items-carrito {
+  min-height: 10vh;
+  background-color: rgb(198, 199, 166);
+  margin-left: 50px;
+  margin-right: 50px;
+  border-radius: 12px;
+}
+
+#tabla-carrito {
+  text-align: center;
+  margin: 10px;
+}
+
+#total-carrito {
+  background-color: rgb(131, 142, 87);
+}

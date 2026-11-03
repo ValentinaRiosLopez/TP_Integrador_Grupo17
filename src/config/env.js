@@ -1,5 +1,6 @@
 export const envs = {
   port: process.env.PORT,
+  apiSecret: process.env.API_SECRET,
   db: {
     host: process.env.DB_HOST,
     name: process.env.DB_NAME,

@@ -4,10 +4,17 @@ import { fileURLToPath } from "node:url";
 import { envs } from "./config/env.js";
 import { connection } from "./config/db_config.js";
 import Productos from "./modelos/productos.js";
+import Usuarios from "./modelos/usuarios.js";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import bcrypt from "bcrypt";
+import { setearCookieDeAutorizacion } from "./middlewares.js";
 
 const app = express();
 
 app.use(express.json());
+app.use(cors()); //estoy seteando cors como middleware para todas las solicitudes
+app.use(cookieParser());
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -54,6 +61,10 @@ app.get("/ticket", (req, res) => {
   res.render("ticket");
 });
 
+app.get("/admin/login", (req, res) => {
+  res.render("admin/login");
+});
+
 // ENDPOINTS
 
 app.get("/api/productos", async (req, res) => {
@@ -69,6 +80,123 @@ app.get("/api/productos", async (req, res) => {
     console.error(error);
     res.status(500).json({
       error: "Error al obtener productos",
+    });
+  }
+});
+
+const verificarCampoRequerido = (campo, nombreCampo, res) => {
+  if (!campo) {
+    res.status(400).json({
+      error: `El campo '${nombreCampo}' es requerido`,
+    });
+  }
+};
+
+// ENDPOINTS Admin //
+// Alta de usuarios
+app.post("/api/admin/altaUsuario", async (req, res) => {
+  try {
+    const { nombre = "", email = "", password = "" } = req.body;
+
+    if (!nombre) return verificarCampoRequerido(nombre, "nombre", res);
+    if (!email) return verificarCampoRequerido(email, "email", res);
+    if (!password) return verificarCampoRequerido(password, "password", res);
+
+    const usuarioExistente = await Usuarios.findOne({
+      where: {
+        email: email,
+      },
+    });
+
+    if (usuarioExistente) {
+      res.status(409).json({
+        // 409 Conflict HTTP status code.
+        error: "El usuario ya existe",
+      });
+      return;
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    const crearUsuario = await Usuarios.create({
+      nombre: nombre,
+      email: email,
+      password_hash: passwordHash,
+    });
+
+    return res.status(201).json({
+      mensaje: "Usuario creado correctamente",
+      usuario: {
+        id: crearUsuario.id,
+        nombre: crearUsuario.nombre,
+        email: crearUsuario.email,
+      },
+    }); // 201 Created HTTP status code.
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Error al intentar crear usuario",
+    });
+  }
+});
+
+// Login de usuarios
+app.post("/api/admin/login", async (req, res) => {
+  try {
+    const { email = "", password = "" } = req.body;
+
+    if (!email) return verificarCampoRequerido(email, "email", res);
+    if (!password) return verificarCampoRequerido(password, "password", res);
+
+    const noAutorizado = () => {
+      return res.status(401).json({
+        // 401 Unauthorized HTTP status code.
+        error: "Credenciales inválidas",
+      });
+    };
+
+    const usuarioExistente = await Usuarios.findOne({
+      where: {
+        email: email,
+      },
+    });
+
+    if (!usuarioExistente) {
+      return noAutorizado();
+    }
+
+    const validacionDeContrasena = await bcrypt.compare(
+      password,
+      usuarioExistente.password_hash,
+    );
+
+    if (!validacionDeContrasena) {
+      return noAutorizado();
+    }
+
+    setearCookieDeAutorizacion(
+      {
+        body: {
+          name: usuarioExistente.nombre,
+          email: email,
+          id: usuarioExistente.id,
+        },
+      },
+      res,
+      () => {},
+    );
+
+    return res.status(200).json({
+      mensaje: "Usuario logueado correctamente",
+      usuario: {
+        nombre: usuarioExistente.nombre,
+        email: usuarioExistente.email,
+      },
+    }); // 200 OK HTTP status code.
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Error al intentar loguear usuario",
     });
   }
 });

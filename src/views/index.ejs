@@ -15,38 +15,44 @@
   <body>
     <%- include('reutilizables/header') %>
     <main id="contenido">
-      <div id="panel-ingreso">
-        <h2>Bienvenido</h2>
-        <div id="ingreso">
-          <div id="error-nombre">
-            <p>ERROR Debe ingresar un nombre</p>
+      <% if (!cliente) { %>
+        <div id="panel-ingreso">
+          <h2>Bienvenido</h2>
+          <div id="ingreso">
+            <div id="error-nombre">
+              <p>ERROR Debe ingresar un nombre</p>
+            </div>
+            <form action="/" method="POST">
+              <label>Ingresá tu nombre: </label>
+              <input type="text" id="txt-nombre" name="name" required>
+              <button type="submit" id="btn-ingreso">Aceptar</button>
+            </form>
+            <a href="/admin/login" id="ingreso-admin">Soy Administrador</a>
           </div>
-          <label>Ingresá tu nombre: </label>
-          <input type="text" id="txt-nombre" />
-          <button id="btn-ingreso">Aceptar</button>
+          
         </div>
-      </div>
-
-      <div id="panel-cliente">
-        <h3>Hola <span id="nombre-cliente"></span>!!!</h3>
-        <button id="btn-salir">Salir</button>
-      </div>
-
-      <div id="inicio">
-        <section id="sobre-nosotros">
-          <h3>Sobre Nosotros</h3>
-          <p>
-            Descripcion de la tienda.Lorem ipsum dolor sit amet consectetur
-            adipiscing, elit venenatis eleifend facilisis sociis aliquam
-            feugiat, metus placerat dignissim urna pellentesque.
-          </p>
-        </section>
-        <div id="productos-destacados">
-          <h2>PRODUCTOS DESTACADOS</h2>
+      <% } else { %>
+        <div id="panel-cliente">
+          <h3>Hola <span id="nombre-cliente"><%= cliente.name %>!!!</span></h3>
+          <form action="/salir" method="POST">
+            <button type="submit" id="btn-salir">Salir</button>
+          </form>
         </div>
-      </div>
+        <div id="inicio">
+          <section id="sobre-nosotros">
+            <h3>Sobre Nosotros</h3>
+            <p>
+              Descripcion de la tienda.Lorem ipsum dolor sit amet consectetur
+              adipiscing, elit venenatis eleifend facilisis sociis aliquam
+              feugiat, metus placerat dignissim urna pellentesque.
+            </p>
+          </section>
+          <div id="productos-destacados">
+            <h2>PRODUCTOS DESTACADOS</h2>
+          </div>
+        </div>
+      <% } %>
     </main>
     <%- include('reutilizables/footer') %>
-    <script src="main.js"></script>
   </body>
 </html>

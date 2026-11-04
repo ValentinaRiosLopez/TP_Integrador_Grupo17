@@ -53,3 +53,42 @@ export async function setearCookieDeAutorizacion(req, res, next) {
 
   res.status(200).send("Cookie seteada");
 }
+
+
+//seteo la cookie de cliente
+export async function setearCookieCliente(req, res, next) {
+  const name = req.body?.name?.trim();
+  const token = await generarJWT({
+    name
+  });
+
+  if (!name) return res.redirect("/");
+
+  res.cookie("cliente", token, {
+    path: "/",
+    httpOnly: true,
+    secure: false,
+    sameSite: "Lax",
+    maxAge: 300000,
+  });
+
+
+  next();
+}
+
+
+
+export function leerCookieCliente(req, res, next) {
+
+  res.locals.cliente = null;
+
+  const token = req.cookies?.cliente;
+  if (token) {
+    try {
+      res.locals.cliente = jwt.verify(token, secret);
+    } catch {
+      res.clearCookie("cliente", { path: "/" });
+    }
+  }
+  next();
+}

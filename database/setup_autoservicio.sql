@@ -16,11 +16,11 @@
 -- Paso 3. Importar el SQL
 -- Desde la pantalla principal de phpMyAdmin, seleccioná Importar, elegí setup_autoservicio.sql y presioná Continuar.
 
-CREATE DATABASE IF NOT EXISTS autoservicio
+CREATE DATABASE IF NOT EXISTS ludonautica
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 
-USE autoservicio;
+USE ludonautica;
 
 -- Tabla 1: productos
 CREATE TABLE IF NOT EXISTS productos (
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS productos (
     precio DECIMAL(10,2) NOT NULL,
     imagen VARCHAR(255) NULL,
     categoria VARCHAR(50) NOT NULL,
-    tipo ENUM('juego', 'dado', 'accesorio') NOT NULL,
+    tipo ENUM('juego', 'dado') NOT NULL,
     activo BOOLEAN NOT NULL DEFAULT TRUE,
     createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

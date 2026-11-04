@@ -48,6 +48,14 @@
   border: 2px solid rgb(31, 45, 19);
   width: 90%;
 }
+#ingreso-admin{
+  font-size: 12px;
+}
+#ingreso-admin:hover{
+  font-size: 12px;
+  background-color: rgb(31, 45, 19);
+  text-decoration: underline;
+}
 
 #error-nombre {
   display: none;

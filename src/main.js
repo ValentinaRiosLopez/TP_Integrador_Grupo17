@@ -54,5 +54,5 @@ function mostrarInicio(){
 
 actualizarInicio();
 
-$("btn-ingreso").addEventListener("click", guardarNombre);
+$("btn-ingreso").addEventListener("click", () => {alert("Boton presionado")});
 $("btn-salir").addEventListener("click", borrarNombre);

@@ -8,13 +8,18 @@ import Usuarios from "./modelos/usuarios.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import bcrypt from "bcrypt";
-import { setearCookieDeAutorizacion } from "./middlewares.js";
+import { setearCookieCliente, setearCookieDeAutorizacion,leerCookieCliente } from "./middlewares.js";
+
+
+
 
 const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors()); //estoy seteando cors como middleware para todas las solicitudes
 app.use(cookieParser());
+app.use(leerCookieCliente);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -91,6 +96,18 @@ const verificarCampoRequerido = (campo, nombreCampo, res) => {
     });
   }
 };
+
+
+//Alta cliente
+app.post("/", setearCookieCliente, (req, res) => {
+  res.redirect("/"); 
+});
+
+//Baja cliente
+app.post("/salir", (req, res) => {
+  res.clearCookie("cliente", { path: "/" });
+  res.redirect("/");
+});
 
 // ENDPOINTS Admin //
 // Alta de usuarios

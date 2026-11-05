@@ -30,7 +30,7 @@
 }
 
 body {
-  max-width: 1200px;
+  max-width: 2000px;
   min-height: 100vh;
   margin: 0 auto;
   display: grid;
@@ -121,6 +121,10 @@ header {
 
 /* ESTILOS MAIN INICIO*/
 
+#contenido{
+  place-items: center;
+}
+
 #sobre-nosotros {
   text-align: center;
   margin: 10px;
@@ -132,6 +136,7 @@ header {
 
 #sobre-nosotros p {
   font-size: 12px;
+  margin-bottom: 30px;
 }
 
 #sobre-nosotros:hover {
@@ -139,6 +144,7 @@ header {
 }
 
 #productos-destacados {
+
   text-align: center;
 }
 
@@ -151,8 +157,10 @@ header {
 
 #panel-cliente {
   text-align: center;
+  align-self: center;
   background-color: rgb(56, 73, 41);
-  width: 100%;
+  width: 50%;
+  min-width: 150px;
   margin: 20px;
   padding: 10px;
   border-radius: 12px;
@@ -162,7 +170,7 @@ header {
   font-family: "Titulos";
 }
 
-#panel-cliente button {
+#btn-salir{
   color: rgb(31, 45, 19);
   background-color: rgb(198, 199, 166);
   border-radius: 5px;
@@ -173,6 +181,10 @@ header {
 
 #panel-cliente span {
   font-family: "Titulos";
+}
+
+#btn-salir:hover{
+  background-color: rgb(131,142,87); 
 }
 
 /* ESTILOS FOOTER */

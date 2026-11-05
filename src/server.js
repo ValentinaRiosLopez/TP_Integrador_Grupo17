@@ -40,22 +40,77 @@ app.use("/recursos", express.static(path.join(__dirname, "recursos")));
 // Carpeta para archivos JS
 app.use("/js", express.static(path.join(__dirname, "js")));
 
+
+//======Funciones get productos=========
+
+async function getProductos() {
+  try {
+    const productos = await Productos.findAll({
+      where: {
+        activo: true,
+      },
+    });
+
+    return productos
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+async function getJuegos() {
+  try {
+    const productos = await Productos.findAll({
+      where: {
+        activo: true,
+        tipo: "juego"
+      },
+    });
+
+    return productos
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+
+async function getDados() {
+  try {
+    const productos = await Productos.findAll({
+      where: {
+        activo: true,
+        tipo: "dado"
+      },
+    });
+
+    return productos
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+
 // RUTAS
 
 app.get("/", (req, res) => {
   res.render("index");
 });
 
-app.get("/productos", (req, res) => {
-  res.render("productos");
+app.get("/productos", async (req, res) => {
+  const productos = await getProductos();
+  res.render("productos", {productos});
 });
 
-app.get("/productos/juegos", (req, res) => {
-  res.render("productos");
+app.get("/productos/juegos", async (req, res) => {
+  const productos = await getJuegos();
+  res.render("productos", {productos});
 });
 
-app.get("/productos/dados", (req, res) => {
-  res.render("productos");
+app.get("/productos/dados", async (req, res) => {
+  const productos = await getDados();
+  res.render("productos", {productos});
 });
 
 app.get("/carrito", (req, res) => {

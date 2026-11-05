@@ -1,0 +1,40 @@
+#titulo-productos{
+    margin:20px;
+    text-decoration: underline;
+}
+#lista-productos{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    row-gap: 15px;
+    padding: 30px;
+    place-items: center;
+    
+}
+
+#producto{
+    margin: 5px;
+    padding: 15px;
+    min-height: 200px;
+    background-color: rgb(31,45,19);
+    max-width: 90%;
+    text-align: center;
+    border: 1px solid rgb(198,199,166);
+    border-radius: 12px;
+    display: grid;
+    grid-template-columns: 1fr;   
+}
+
+#texto-producto{
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 10px; 
+}
+
+#texto-producto h3{
+    text-decoration: underline;
+}
+
+#producto:hover{
+    background-color: rgb(15,24,10);  
+}
+

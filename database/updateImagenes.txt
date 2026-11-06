@@ -1,0 +1,10 @@
+UPDATE `productos` SET `imagen`='/public/static/imagenes/catan.jpg' WHERE `productos`.`id`=1;
+UPDATE `productos` SET `imagen`='/public/static/imagenes/carcassonne.jpg' WHERE `productos`.`id`= 2;
+UPDATE `productos` SET `imagen`='/public/static/imagenes/dixit.jpg' WHERE `productos`.`id`= 3;
+UPDATE `productos` SET `imagen`='/public/static/imagenes/azul.jpg' WHERE `productos`.`id`= 4;
+UPDATE `productos` SET `imagen`='/public/static/imagenes/ticket-to-ride.png' WHERE `productos`.`id`= 5;
+UPDATE `productos` SET `imagen`='/public/static/imagenes/dobble.jpg' WHERE `productos`.`id`= 6;
+UPDATE `productos` SET `imagen`='/public/static/imagenes/exploding-kittens.jpg' WHERE `productos`.`id`= 7;
+UPDATE `productos` SET `imagen`='/public/static/imagenes/codigo-secreto.jpg' WHERE `productos`.`id`= 8;
+UPDATE `productos` SET `imagen`='/public/static/imagenes/virus!.jpg' WHERE `productos`.`id`= 9;
+UPDATE `productos` SET `imagen`='/public/static/imagenes/kingdomino.jpg' WHERE `productos`.`id`= 10;

@@ -35,7 +35,7 @@ export async function setearCookieDeAutorizacion(req, res, next) {
 export async function setearCookieCliente(req, res, next) {
   const name = req.body?.name?.trim();
   const token = await generarJWT({
-    name,
+    name
   });
 
   if (!name) return res.redirect("/");
@@ -58,12 +58,11 @@ export function leerCookieCliente(req, res, next) {
 
   if (token) {
     try {
-      const payload = jwt.verify(token, secret); //verifico el token y lo guardo en locals para poder usar el nombre despues;
-      res.locals.cliente = payload;
-      return res.status(200).send(payload);
+          res.locals.cliente = jwt.verify(token, secret);//verifico el token y lo guardo en locals para poder usar el nombre despues
+
     } catch {
-      res.clearCookie("cliente", { path: "/" }); //sino borra la cookie invalida
-      return res.status(401).send("Token inválido o expirado");
+          res.clearCookie("cliente", { path: "/" }); //sino borra la cookie invalida
+F
     }
   }
   next();

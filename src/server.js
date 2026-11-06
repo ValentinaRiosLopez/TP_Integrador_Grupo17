@@ -8,8 +8,13 @@ import Usuarios from "./modelos/usuarios.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import bcrypt from "bcrypt";
-import multer from 'multer';
-import { setearCookieCliente, setearCookieDeAutorizacion,leerCookieCliente, requerirCliente } from "./middlewares.js";
+import multer from "multer";
+import {
+  setearCookieCliente,
+  setearCookieDeAutorizacion,
+  leerCookieCliente,
+  requerirCliente,
+} from "./middlewares.js";
 
 const app = express();
 
@@ -20,7 +25,7 @@ app.use(cookieParser());
 app.use(leerCookieCliente);
 
 const __dirname = import.meta.dirname;
-const carpetaRaiz = path.join(__dirname, "..")
+const carpetaRaiz = path.join(__dirname, "..");
 
 // Configurar EJS como motor de vistas
 app.set("view engine", "ejs");
@@ -39,7 +44,6 @@ app.use("/public", express.static(path.join(carpetaRaiz, "public")));
 // Carpeta para archivos JS
 app.use("/js", express.static(path.join(__dirname, "js")));
 
-
 //======Funciones get productos=========
 //traigo los productos de la base de datos
 //despues capaz las cambio todas a una sola funcion que sea reutilizable
@@ -51,7 +55,7 @@ async function getProductos() {
       },
     });
 
-    return productos
+    return productos;
   } catch (error) {
     console.error(error);
     return null;
@@ -63,11 +67,11 @@ async function getJuegos() {
     const productos = await Productos.findAll({
       where: {
         activo: true,
-        tipo: "juego"
+        tipo: "juego",
       },
     });
 
-    return productos
+    return productos;
   } catch (error) {
     console.error(error);
     return null;
@@ -79,11 +83,11 @@ async function getDados() {
     const productos = await Productos.findAll({
       where: {
         activo: true,
-        tipo: "dado"
+        tipo: "dado",
       },
     });
 
-    return productos
+    return productos;
   } catch (error) {
     console.error(error);
     return null;
@@ -96,29 +100,29 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
-app.get("/productos", requerirCliente ,async (req, res) => {
+app.get("/productos", requerirCliente, async (req, res) => {
   const productos = await getProductos();
   if (!productos) return res.status(500).send("Error al obtener productos");
-  res.render("productos", {productos});
+  res.render("productos", { productos });
 });
 
-app.get("/productos/juegos", requerirCliente ,async (req, res) => {
+app.get("/productos/juegos", requerirCliente, async (req, res) => {
   const productos = await getJuegos();
   if (!productos) return res.status(500).send("Error al obtener productos");
-  res.render("productos", {productos});
+  res.render("productos", { productos });
 });
 
-app.get("/productos/dados", requerirCliente ,async (req, res) => {
+app.get("/productos/dados", requerirCliente, async (req, res) => {
   const productos = await getDados();
   if (!productos) return res.status(500).send("Error al obtener productos");
-  res.render("productos", {productos});
+  res.render("productos", { productos });
 });
 
-app.get("/carrito", requerirCliente , (req, res) => {
+app.get("/carrito", requerirCliente, (req, res) => {
   res.render("carrito");
 });
 
-app.get("/ticket", requerirCliente ,(req, res) => {
+app.get("/ticket", requerirCliente, (req, res) => {
   res.render("ticket");
 });
 
@@ -145,23 +149,31 @@ app.get("/api/productos", async (req, res) => {
   }
 });
 
-const verificarCampoRequerido = (campo, nombreCampo, res) => {
-  if (!campo) {
-    res.status(400).json({
-      error: `El campo '${nombreCampo}' es requerido`,
-    });
+const verificarCamposRequerido = (campos, res) => {
+  const camposFaltantes = campos.filter((campo) => !campo.valorDeCampo);
+
+  if (camposFaltantes.length > 0) {
+    if (camposFaltantes.length > 1) {
+      const nombresCampos = camposFaltantes.map((campo) => campo.nombreDeCampo);
+      res.status(400).json({
+        error: `Los campos '${nombresCampos.join(", ")}' son requeridos`,
+      });
+    } else {
+      res.status(400).json({
+        error: `El campo '${camposFaltantes[0].nombreDeCampo}' es requerido`,
+      });
+    }
   }
 };
-
 
 //Alta cliente
 //le setea la cookie y reenderiza la pagina sin el login
 app.post("/", setearCookieCliente, (req, res) => {
-  res.redirect("/"); 
+  res.redirect("/");
 });
 
 //Baja cliente
-//borra la cookie y vuelve a mostrar el login 
+//borra la cookie y vuelve a mostrar el login
 app.post("/salir", (req, res) => {
   res.clearCookie("cliente", { path: "/" });
   res.redirect("/");
@@ -172,10 +184,23 @@ app.post("/salir", (req, res) => {
 app.post("/api/admin/altaUsuario", async (req, res) => {
   try {
     const { nombre = "", email = "", password = "" } = req.body;
-
-    if (!nombre) return verificarCampoRequerido(nombre, "nombre", res);
-    if (!email) return verificarCampoRequerido(email, "email", res);
-    if (!password) return verificarCampoRequerido(password, "password", res);
+    verificarCamposRequerido(
+      [
+        {
+          valorDeCampo: nombre,
+          nombreDeCampo: "nombre",
+        },
+        {
+          valorDeCampo: email,
+          nombreDeCampo: "email",
+        },
+        {
+          valorDeCampo: password,
+          nombreDeCampo: "password",
+        },
+      ],
+      res,
+    );
 
     const usuarioExistente = await Usuarios.findOne({
       where: {
@@ -219,9 +244,19 @@ app.post("/api/admin/altaUsuario", async (req, res) => {
 app.post("/api/admin/login", async (req, res) => {
   try {
     const { email = "", password = "" } = req.body;
-
-    if (!email) return verificarCampoRequerido(email, "email", res);
-    if (!password) return verificarCampoRequerido(password, "password", res);
+    verificarCamposRequerido(
+      [
+        {
+          valorDeCampo: email,
+          nombreDeCampo: "email",
+        },
+        {
+          valorDeCampo: password,
+          nombreDeCampo: "password",
+        },
+      ],
+      res,
+    );
 
     const noAutorizado = () => {
       return res.status(401).json({

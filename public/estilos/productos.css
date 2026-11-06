@@ -47,3 +47,27 @@
     background-color: rgb(15,24,10);  
 }
 
+#section-agregar{
+    margin: 10px
+}
+
+#form-agregar input{
+    
+    color:black;
+    text-align: center;
+}
+
+#form-agregar button{
+    margin-top: 10px;
+    color: rgb(31, 45, 19);
+    background-color: rgb(198, 199, 166);
+    border-radius: 5px;
+    border: 2px solid rgb(31, 45, 19);
+    width: 90%;
+}
+
+#form-agregar button:hover{
+    background-color: rgb(131,142,87); 
+}
+
+

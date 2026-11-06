@@ -8,10 +8,8 @@ import Usuarios from "./modelos/usuarios.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import bcrypt from "bcrypt";
+import multer from 'multer';
 import { setearCookieCliente, setearCookieDeAutorizacion,leerCookieCliente, requerirCliente } from "./middlewares.js";
-
-
-
 
 const app = express();
 

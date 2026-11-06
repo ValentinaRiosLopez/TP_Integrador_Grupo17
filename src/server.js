@@ -8,7 +8,7 @@ import Usuarios from "./modelos/usuarios.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import bcrypt from "bcrypt";
-import { setearCookieCliente, setearCookieDeAutorizacion,leerCookieCliente } from "./middlewares.js";
+import { setearCookieCliente, setearCookieDeAutorizacion,leerCookieCliente, requerirCliente } from "./middlewares.js";
 
 
 
@@ -21,7 +21,8 @@ app.use(cors()); //estoy seteando cors como middleware para todas las solicitude
 app.use(cookieParser());
 app.use(leerCookieCliente);
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = import.meta.dirname;
+const carpetaRaiz = path.join(__dirname, "..")
 
 // Configurar EJS como motor de vistas
 app.set("view engine", "ejs");
@@ -33,16 +34,17 @@ https://expressjs.com/en/5x/guide/using-template-engines/
 Eg: app.set('views', './views'). 
 This defaults to the views directory in the application root directory."
 */
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(carpetaRaiz, "views"));
 
 // Carpeta para archivos públicos (CSS, imágenes, etc.)
-app.use("/recursos", express.static(path.join(__dirname, "recursos")));
+app.use("/public", express.static(path.join(carpetaRaiz, "public")));
 // Carpeta para archivos JS
 app.use("/js", express.static(path.join(__dirname, "js")));
 
 
 //======Funciones get productos=========
-
+//traigo los productos de la base de datos
+//despues capaz las cambio todas a una sola funcion que sea reutilizable
 async function getProductos() {
   try {
     const productos = await Productos.findAll({
@@ -98,26 +100,30 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
-app.get("/productos", async (req, res) => {
+
+app.get("/productos", requerirCliente ,async (req, res) => {
   const productos = await getProductos();
+  if (!productos) return res.status(500).send("Error al obtener productos");
   res.render("productos", {productos});
 });
 
-app.get("/productos/juegos", async (req, res) => {
+app.get("/productos/juegos", requerirCliente ,async (req, res) => {
   const productos = await getJuegos();
+  if (!productos) return res.status(500).send("Error al obtener productos");
   res.render("productos", {productos});
 });
 
-app.get("/productos/dados", async (req, res) => {
+app.get("/productos/dados", requerirCliente ,async (req, res) => {
   const productos = await getDados();
+  if (!productos) return res.status(500).send("Error al obtener productos");
   res.render("productos", {productos});
 });
 
-app.get("/carrito", (req, res) => {
+app.get("/carrito", requerirCliente , (req, res) => {
   res.render("carrito");
 });
 
-app.get("/ticket", (req, res) => {
+app.get("/ticket", requerirCliente ,(req, res) => {
   res.render("ticket");
 });
 
@@ -154,11 +160,13 @@ const verificarCampoRequerido = (campo, nombreCampo, res) => {
 
 
 //Alta cliente
+//le setea la cookie y reenderiza la pagina sin el login
 app.post("/", setearCookieCliente, (req, res) => {
   res.redirect("/"); 
 });
 
 //Baja cliente
+//borra la cookie y vuelve a mostrar el login 
 app.post("/salir", (req, res) => {
   res.clearCookie("cliente", { path: "/" });
   res.redirect("/");

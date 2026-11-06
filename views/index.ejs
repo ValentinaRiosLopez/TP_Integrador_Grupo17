@@ -6,14 +6,14 @@
     <title>TP INTEGRADOR</title>
     <link
       rel="shortcut icon"
-      href="/recursos/imagenes/logo.png"
+      href="../public/imagenes/logo.png"
       type="image/x-icon"
     />
-    <link rel="stylesheet" href="/recursos/estilos/index.css" />
-    <link rel="stylesheet" href="/recursos/style.css" />
+    <link rel="stylesheet" href="../public/estilos/index.css" />
+    <link rel="stylesheet" href="../public/estilos/style.css" />
   </head>
   <body>
-    <%- include('reutilizables/header') %>
+    <%- include('./header') %>
     <main id="contenido">
       <% if (!cliente) { %>
         <div id="panel-ingreso">
@@ -50,6 +50,6 @@
         </div>
       <% } %>
     </main>
-    <%- include('reutilizables/footer') %>
+    <%- include('./footer') %>
   </body>
 </html>

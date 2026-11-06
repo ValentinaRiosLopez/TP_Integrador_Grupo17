@@ -11,12 +11,12 @@
 
 @font-face {
   font-family: "Titulos";
-  src: url("./fuentes/Pixelify_Sans/PixelifySans-VariableFont_wght.ttf");
+  src: url("../fuentes/Pixelify_Sans/PixelifySans-VariableFont_wght.ttf");
 }
 
 @font-face {
   font-family: "Texto";
-  src: url("./fuentes/Atkinson_Hyperlegible_Mono/AtkinsonHyperlegibleMono-VariableFont_wght.ttf");
+  src: url("../fuentes/Atkinson_Hyperlegible_Mono/AtkinsonHyperlegibleMono-VariableFont_wght.ttf");
 }
 
 * {

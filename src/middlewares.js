@@ -69,7 +69,7 @@ export async function setearCookieCliente(req, res, next) {
     httpOnly: true,
     secure: false,
     sameSite: "Lax",
-    maxAge: 300000,
+    maxAge: 1000 * 60 * 10,
   });
 
 
@@ -80,15 +80,22 @@ export async function setearCookieCliente(req, res, next) {
 
 export function leerCookieCliente(req, res, next) {
 
-  res.locals.cliente = null;
+  res.locals.cliente = null; //aca inicializo la variable de cliente para que siempre exista
 
-  const token = req.cookies?.cliente;
+  const token = req.cookies?.cliente; //leo la cookie 
+   
   if (token) {
     try {
-      res.locals.cliente = jwt.verify(token, secret);
+      res.locals.cliente = jwt.verify(token, secret);//verifico el token y lo guardo en locals para poder usar el nombre despues
     } catch {
-      res.clearCookie("cliente", { path: "/" });
+      res.clearCookie("cliente", { path: "/" }); //sino borra la cookie invalida
     }
   }
+  next();
+}
+
+//si pasa el tiempo de expiracion devuelve al cliente al login
+export function requerirCliente(req, res, next) {
+  if (!res.locals.cliente) return res.redirect("/");
   next();
 }

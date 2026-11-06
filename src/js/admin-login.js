@@ -16,5 +16,5 @@ formLogin.addEventListener("submit", (event) => {
   event.preventDefault();
 
   loginError.textContent =
-    "La autenticación todavía no está implementada.";
+    "Completar.";
 });

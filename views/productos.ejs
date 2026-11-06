@@ -6,28 +6,28 @@
     <title>TP INTEGRADOR</title>
     <link
       rel="shortcut icon"
-      href="../public/imagenes/logo.png"
+      href="../public/static/imagenes/logo.png"
       type="image/x-icon"
     />
-    <link rel="stylesheet" href="../public/estilos/productos.css" />
-    <link rel="stylesheet" href="../public/estilos/style.css" />
+    <link rel="stylesheet" href="../public/static/estilos/productos.css" />
+    <link rel="stylesheet" href="../public/static/estilos/style.css" />
 
   </head>
   <body>
-    <%- include('./header') %>
+    <%- include('../src/componentes/header') %>
     <main id="contenido">
       <h1 id="titulo-productos">Nuestros Productos</h1>
 
       <div id="lista-productos">
         <% if(productos && productos.length > 0) {%>
           <% productos.forEach(producto => { -%>
-            <%- include('./producto', { producto }) %>
+            <%- include('../src/componentes/tarjetaProducto', { producto }) %>
           <% }); -%>
         <% } else { %>
 
         <% } %> 
       </div>
     </main>
-    <%- include('./footer') %>
+    <%- include('../src/componentes/footer') %>
   </body>
 </html>

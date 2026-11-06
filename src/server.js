@@ -74,7 +74,6 @@ async function getJuegos() {
   }
 }
 
-
 async function getDados() {
   try {
     const productos = await Productos.findAll({
@@ -91,13 +90,11 @@ async function getDados() {
   }
 }
 
-
 // RUTAS
 
 app.get("/", (req, res) => {
   res.render("index");
 });
-
 
 app.get("/productos", requerirCliente ,async (req, res) => {
   const productos = await getProductos();

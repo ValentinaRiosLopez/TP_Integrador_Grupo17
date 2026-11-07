@@ -1,6 +1,7 @@
 #titulo-productos{
     margin:20px;
     text-decoration: underline;
+    font-family: "Titulos";
 }
 #lista-productos{
     display:grid;

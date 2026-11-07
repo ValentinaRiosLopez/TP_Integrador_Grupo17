@@ -15,19 +15,24 @@
   <body>
     <%- include('../src/componentes/header') %>
     <main id="contenido">
-      <div id="carrito">
-        <h2>Carrito</h2>
-        <div id="items-carrito">
-          <table id="tabla-carrito">
-            <tbody id="productos-carrito"></tbody>
-            <tfoot id="total-carrito">
-              <tr id="fila-total">
-                <td>Total:</td>
-              </tr>
-            </tfoot>
+      <h2>Carrito</h2>
+
+      
+      <form id="form-carrito">
+        <div id="carrito">
+          <table id="items-carrito">
+          
+            
           </table>
+          <div id="total">
+            <h2>Total: <span id="total-compra">0.00</span></h2>
+          </div> 
         </div>
-      </div>
+        <button type="submit" id="btn-comprar">COMPRAR</button>
+      </form> 
+      
+      
+      
     </main>
    
     <%- include('../src/componentes/footer') %>

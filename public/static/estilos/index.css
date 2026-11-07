@@ -80,3 +80,37 @@
   flex-direction: column;
   gap: 12px;
 }
+
+#productos{
+  width: 70%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  place-items: center;
+  margin: 20px;
+  margin-bottom: 50px;
+}
+
+.tarjeta-productos{
+  margin: 5px;
+  padding: 15px;
+  height: 100%;
+  background-color: rgb(31,45,19);
+  max-width: 90%;
+  text-align: center;
+  border: 1px solid rgb(198,199,166);
+  border-radius: 12px;
+  display: grid;
+  grid-template-columns: 1fr;   
+  justify-content: space-between;
+}
+
+.tarjeta-productos:hover{
+  background-color: rgb(15,24,10);
+  text-decoration: underline;  
+}
+
+#imagen-producto img{
+    width: 90%;
+    max-width: 360px;
+    border-radius: 12px;
+}

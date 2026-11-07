@@ -1,22 +1,43 @@
 
 /* ESTILOS MAIN CARRITO */
-#carrito h2 {
+h2 {
   font-family: "Titulos";
   text-align: center;
   margin: 10px;
 }
-#items-carrito {
-  min-height: 10vh;
-  background-color: rgb(198, 199, 166);
-  margin-left: 50px;
-  margin-right: 50px;
-  border-radius: 12px;
+#form-carrito{
+  width: 70%;
+  place-items: center;
 }
 
-#tabla-carrito {
-  text-align: center;
-  margin: 10px;
+#carrito{
+ width: 100%;
+ display: grid;
+ min-width: 300px;
+ max-width: 600px;
+ grid-template-columns: 1fr;
+ place-items: center;
+ background-color: rgb(198, 199, 166);
+ border-radius: 12px;
 }
+
+#items-carrito {
+  min-height: 10vh;
+  width: 100%;
+  
+  margin-left: 50px;
+  margin-right: 50px;
+  
+}
+
+#total{
+ background-color: rgb(131,142,87);
+ width: 100%;
+ border-radius: 12px;
+
+}
+
+
 
 #total-carrito {
   background-color: rgb(131, 142, 87);

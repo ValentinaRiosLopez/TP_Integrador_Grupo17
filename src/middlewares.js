@@ -12,12 +12,18 @@ async function generarJWT(payload) {
   return token;
 }
 
-export async function setearCookieDeAutorizacion(req, res, next) {
-  const { name, email, id } = req.body;
+
+export async function setearCookieDeAutorizacion(req, res, next = () => {}) {
+  const usuario = req.usuarioAutenticado;
+
+  if (!usuario) {
+    return res.status(401).json({
+      error: "Usuario no autenticado",
+    });
+  }
+
   const token = await generarJWT({
-    name,
-    email,
-    id,
+    id: usuario.id,
   });
 
   res.cookie("autorizacion", token, {
@@ -25,17 +31,18 @@ export async function setearCookieDeAutorizacion(req, res, next) {
     httpOnly: true,
     secure: false,
     sameSite: "Lax",
-    maxAge: 300000,
+    maxAge: 1000 * 60 * 30,
   });
 
-  res.status(200).send("Cookie seteada");
+  next();
 }
+
 
 //seteo la cookie de cliente
 export async function setearCookieCliente(req, res, next) {
   const name = req.body?.name?.trim();
   const token = await generarJWT({
-    name
+    name,
   });
 
   if (!name) return res.redirect("/");
@@ -58,11 +65,9 @@ export function leerCookieCliente(req, res, next) {
 
   if (token) {
     try {
-          res.locals.cliente = jwt.verify(token, secret);//verifico el token y lo guardo en locals para poder usar el nombre despues
-
+      res.locals.cliente = jwt.verify(token, secret); //verifico el token y lo guardo en locals para poder usar el nombre despues
     } catch {
-          res.clearCookie("cliente", { path: "/" }); //sino borra la cookie invalida
-F
+      res.clearCookie("cliente", { path: "/" }); //sino borra la cookie invalida
     }
   }
   next();
@@ -70,6 +75,47 @@ F
 
 //si pasa el tiempo de expiracion devuelve al cliente al login
 export function requerirCliente(req, res, next) {
+  console.log({ req, res });
   if (!res.locals.cliente) return res.redirect("/");
   next();
+}
+
+export function verificarCamposRequeridos(...campos) {
+  return (req, res, next) => {
+    const camposFaltantes = campos.filter((campo) => {
+      const valor = req.body?.[campo];
+
+      return typeof valor !== "string" || !valor.trim();
+    });
+
+    if (camposFaltantes.length > 0) {
+      return res.status(400).json({
+        error: `Campos requeridos: ${camposFaltantes.join(", ")}`,
+      });
+    }
+
+    next();
+  };
+}
+
+export function validarSesionActiva(req, res, next) {
+  const token = req.cookies?.autorizacion;
+
+  if (!token) {
+    return next();
+  }
+
+  try {
+    jwt.verify(token, secret);
+
+    return res.status(200).json({
+      mensaje: "Ya tenés una sesión activa",
+    });
+  } catch (error) {
+    res.clearCookie("autorizacion", {
+      path: "/",
+    });
+
+    return next();
+  }
 }

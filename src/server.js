@@ -14,10 +14,11 @@ import {
   setearCookieDeAutorizacion,
   leerCookieCliente,
   requerirCliente,
+  verificarCamposRequeridos,
+  validarSesionActiva,
 } from "./middlewares.js";
 
 const app = express();
-
 
 const __dirname = import.meta.dirname;
 const carpetaRaiz = path.join(__dirname, "..");
@@ -25,41 +26,35 @@ const carpetaRaiz = path.join(__dirname, "..");
 //setup para subir imagenes
 const storage = multer.diskStorage({
   destination: path.join(carpetaRaiz, "public", "static", "imagenes"),
-  filename: (req,file,call) =>{
+  filename: (req, file, call) => {
     const nombreUnico = crypto.randomUUID();
     const ext = path.extname(file.originalname);
-    call(null, nombreUnico + ext)
-  }
+    call(null, nombreUnico + ext);
+  },
 });
 
-const fileFilter = (req, file, call)=>{
-
-  const tiposValidos = ["image/jpeg", "image/png"]
-  if(tiposValidos.includes(file.mimetype)){
-    call(null,true);
-  }else{
+const fileFilter = (req, file, call) => {
+  const tiposValidos = ["image/jpeg", "image/png"];
+  if (tiposValidos.includes(file.mimetype)) {
+    call(null, true);
+  } else {
     call(new Error("Tipo de archivo invalido."), false);
   }
-
-}
+};
 
 const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 5*1024*1024
-  }
+    fileSize: 5 * 1024 * 1024,
+  },
 });
-
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors()); //estoy seteando cors como middleware para todas las solicitudes
 app.use(cookieParser());
 app.use(leerCookieCliente);
-
-
 
 // Configurar EJS como motor de vistas
 app.set("view engine", "ejs");
@@ -183,23 +178,6 @@ app.get("/api/productos", async (req, res) => {
   }
 });
 
-const verificarCamposRequerido = (campos, res) => {
-  const camposFaltantes = campos.filter((campo) => !campo.valorDeCampo);
-
-  if (camposFaltantes.length > 0) {
-    if (camposFaltantes.length > 1) {
-      const nombresCampos = camposFaltantes.map((campo) => campo.nombreDeCampo);
-      res.status(400).json({
-        error: `Los campos '${nombresCampos.join(", ")}' son requeridos`,
-      });
-    } else {
-      res.status(400).json({
-        error: `El campo '${camposFaltantes[0].nombreDeCampo}' es requerido`,
-      });
-    }
-  }
-};
-
 //Alta cliente
 //le setea la cookie y reenderiza la pagina sin el login
 app.post("/", setearCookieCliente, (req, res) => {
@@ -216,9 +194,9 @@ app.post("/salir", (req, res) => {
 //==== ENDPOINS IMAGENES ====
 
 //guarda imagen en la base de datos
-app.post("/subirImagen", upload.single('imagen'), (req, res)=>{
-  if(!req.file){
-    return res.status(400).json({error: "No se subio ninguna imagen"})
+app.post("/subirImagen", upload.single("imagen"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "No se subio ninguna imagen" });
   }
 
   //aca armo el string del url de la imagen
@@ -232,135 +210,106 @@ app.post("/subirImagen", upload.single('imagen'), (req, res)=>{
 
 // ENDPOINTS Admin //
 // Alta de usuarios
-app.post("/api/admin/altaUsuario", async (req, res) => {
-  try {
-    const { nombre = "", email = "", password = "" } = req.body;
-    verificarCamposRequerido(
-      [
-        {
-          valorDeCampo: nombre,
-          nombreDeCampo: "nombre",
-        },
-        {
-          valorDeCampo: email,
-          nombreDeCampo: "email",
-        },
-        {
-          valorDeCampo: password,
-          nombreDeCampo: "password",
-        },
-      ],
-      res,
-    );
+app.post(
+  "/api/admin/altaUsuario",
+  verificarCamposRequeridos("nombre", "email", "password"),
+  async (req, res) => {
+    try {
+      const { nombre = "", email = "", password = "" } = req.body;
 
-    const usuarioExistente = await Usuarios.findOne({
-      where: {
-        email: email,
-      },
-    });
-
-    if (usuarioExistente) {
-      res.status(409).json({
-        // 409 Conflict HTTP status code.
-        error: "El usuario ya existe",
+      const usuarioExistente = await Usuarios.findOne({
+        where: {
+          email: email,
+        },
       });
-      return;
+
+      if (usuarioExistente) {
+        res.status(409).json({
+          // 409 Conflict HTTP status code.
+          error: "El usuario ya existe",
+        });
+        return;
+      }
+
+      const passwordHash = await bcrypt.hash(password, 10);
+
+      const crearUsuario = await Usuarios.create({
+        nombre: nombre,
+        email: email,
+        password_hash: passwordHash,
+      });
+
+      return res.status(201).json({
+        mensaje: "Usuario creado correctamente",
+        usuario: {
+          id: crearUsuario.id,
+          nombre: crearUsuario.nombre,
+          email: crearUsuario.email,
+        },
+      }); // 201 Created HTTP status code.
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        error: "Error al intentar crear usuario",
+      });
     }
-
-    const passwordHash = await bcrypt.hash(password, 10);
-
-    const crearUsuario = await Usuarios.create({
-      nombre: nombre,
-      email: email,
-      password_hash: passwordHash,
-    });
-
-    return res.status(201).json({
-      mensaje: "Usuario creado correctamente",
-      usuario: {
-        id: crearUsuario.id,
-        nombre: crearUsuario.nombre,
-        email: crearUsuario.email,
-      },
-    }); // 201 Created HTTP status code.
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      error: "Error al intentar crear usuario",
-    });
-  }
-});
+  },
+);
 
 // Login de usuarios
-app.post("/api/admin/login", async (req, res) => {
-  try {
-    const { email = "", password = "" } = req.body;
-    verificarCamposRequerido(
-      [
-        {
-          valorDeCampo: email,
-          nombreDeCampo: "email",
-        },
-        {
-          valorDeCampo: password,
-          nombreDeCampo: "password",
-        },
-      ],
-      res,
-    );
+app.post(
+  "/api/admin/login",
+  validarSesionActiva,
+  verificarCamposRequeridos("email", "password"),
+  async (req, res) => {
+    try {
+      const { email = "", password = "" } = req.body;
 
-    const noAutorizado = () => {
-      return res.status(401).json({
-        // 401 Unauthorized HTTP status code.
-        error: "Credenciales inválidas",
-      });
-    };
+      const noAutorizado = () => {
+        return res.status(401).json({
+          // 401 Unauthorized HTTP status code.
+          error: "Credenciales inválidas",
+        });
+      };
 
-    const usuarioExistente = await Usuarios.findOne({
-      where: {
-        email: email,
-      },
-    });
-
-    if (!usuarioExistente) {
-      return noAutorizado();
-    }
-
-    const validacionDeContrasena = await bcrypt.compare(
-      password,
-      usuarioExistente.password_hash,
-    );
-
-    if (!validacionDeContrasena) {
-      return noAutorizado();
-    }
-
-    setearCookieDeAutorizacion(
-      {
-        body: {
-          name: usuarioExistente.nombre,
+      const usuarioExistente = await Usuarios.findOne({
+        where: {
           email: email,
-          id: usuarioExistente.id,
         },
-      },
-      res,
-      () => {},
-    );
+      });
 
-    return res.status(200).json({
-      mensaje: "Usuario logueado correctamente",
-      usuario: {
-        nombre: usuarioExistente.nombre,
-        email: usuarioExistente.email,
-      },
-    }); // 200 OK HTTP status code.
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      error: "Error al intentar loguear usuario",
-    });
-  }
-});
+      if (!usuarioExistente) {
+        return noAutorizado();
+      }
+
+      const validacionDeContrasena = await bcrypt.compare(
+        password,
+        usuarioExistente.password_hash,
+      );
+
+      if (!validacionDeContrasena) {
+        return noAutorizado();
+      }
+
+      req.usuarioAutenticado = usuarioExistente;
+
+      await setearCookieDeAutorizacion(req, res);
+
+      return res.status(200).json({
+        mensaje: "Usuario logueado correctamente",
+        usuario: {
+          nombre: usuarioExistente.nombre,
+          email: usuarioExistente.email,
+        },
+      }); // 200 OK HTTP status code.
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        error: "Error al intentar loguear usuario",
+      });
+    }
+  },
+);
 
 try {
   await connection.authenticate();

@@ -80,42 +80,23 @@ export function requerirCliente(req, res, next) {
   next();
 }
 
-export function verificarCamposRequeridos(...campos) {
-  return (req, res, next) => {
-    const camposFaltantes = campos.filter((campo) => {
-      const valor = req.body?.[campo];
 
-      return typeof valor !== "string" || !valor.trim();
-    });
+//Middelware carrito
 
-    if (camposFaltantes.length > 0) {
-      return res.status(400).json({
-        error: `Campos requeridos: ${camposFaltantes.join(", ")}`,
-      });
-    }
-
-    next();
-  };
+export function leerCarrito(req) {
+  try {
+    const carrito = JSON.parse(req.cookies?.carrito ?? "[]");
+    return Array.isArray(carrito) ? carrito : [];
+  } catch {
+    return [];
+  }
 }
 
-export function validarSesionActiva(req, res, next) {
-  const token = req.cookies?.autorizacion;
-
-  if (!token) {
-    return next();
-  }
-
-  try {
-    jwt.verify(token, secret);
-
-    return res.status(200).json({
-      mensaje: "Ya tenés una sesión activa",
-    });
-  } catch (error) {
-    res.clearCookie("autorizacion", {
-      path: "/",
-    });
-
-    return next();
-  }
+export function guardarCarrito(res, carrito) {
+  res.cookie("carrito", JSON.stringify(carrito), {
+    path: "/",
+    httpOnly: true,
+    sameSite: "Lax",
+    maxAge: 24 * 60 * 60 * 1000, 
+  });
 }

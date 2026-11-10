@@ -13,9 +13,11 @@ import {
   setearCookieCliente,
   setearCookieDeAutorizacion,
   leerCookieCliente,
-  requerirCliente,
+  requerirCliente, 
+  leerCarrito, 
+  guardarCarrito,
   verificarCamposRequeridos,
-  validarSesionActiva,
+  validarSesionActiva
 } from "./middlewares.js";
 
 const app = express();
@@ -148,6 +150,7 @@ app.get("/productos/dados", requerirCliente, async (req, res) => {
 });
 
 app.get("/carrito", requerirCliente, (req, res) => {
+  
   res.render("carrito");
 });
 
@@ -207,6 +210,55 @@ app.post("/subirImagen", upload.single("imagen"), (req, res) => {
 
   res.status(201).json({ imagen: rutaImg });
 });
+
+//funcion leer carrito
+
+async function detalleCarrito(req) {
+  const carrito = leerCarrito(req);
+  if (carrito.length === 0) return { items: [], total: 0 };
+
+  const productos = await Productos.findAll({
+    where: { id: carrito.map((i) => i.id), activo: true },
+  });
+
+  const items = carrito.flatMap(({ id, cantidad }) => {
+    const producto = productos.find((p) => p.id === id);
+    if (!producto) return []; // producto dado de baja: se ignora
+    return [{ producto, cantidad, subtotal: Number(producto.precio) * cantidad }];
+  });
+
+  const total = items.reduce((acc, i) => acc + i.subtotal, 0);
+  return { items, total };
+}
+
+
+//=======ENDPOINTS CARRITO==========
+
+app.post("/carrito", requerirCliente, async (req, res) => {
+  const id = Number(req.body.productoId);
+  const cantidad = parseInt(req.body.cantidad) || 1; //si la cantidad es invalida defaultea a 1
+
+  //si el id es invalido
+  if (!Number.isInteger(id)) return res.status(400).send("Producto inválido");
+
+  //busca si el producto existe y esta activo
+  const producto = await Productos.findOne({ where: { id, activo: true } });
+  if (!producto) return res.status(404).send("Producto no encontrado");
+
+  //busca si hay productos en el carrito sino devuelve un array vacio
+  const carrito = leerCarrito(req);
+  const item = carrito.find((i) => i.id === id); //busca si ya se agrego el producto al carrito
+
+  //si ya existe en el carrito suma las cantidades con tope de 10 (si se pasa devuelve 10)
+  if (item) item.cantidad = Math.min(10, item.cantidad + cantidad);
+  else carrito.push({ id, cantidad });
+
+  console.log(carrito);
+
+  guardarCarrito(res, carrito); //guarda el carrito
+  res.redirect(req.get("referer") || "/productos"); // vuelve a donde estaba
+});
+
 
 // ENDPOINTS Admin //
 // Alta de usuarios

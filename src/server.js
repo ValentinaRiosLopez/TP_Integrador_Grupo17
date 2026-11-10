@@ -13,11 +13,11 @@ import {
   setearCookieCliente,
   setearCookieDeAutorizacion,
   leerCookieCliente,
-  requerirCliente, 
-  leerCarrito, 
-  guardarCarrito,
+  requerirCliente,
   verificarCamposRequeridos,
-  validarSesionActiva
+  validarSesionActiva, 
+  leerCarrito, 
+  guardarCarrito
 } from "./middlewares.js";
 
 const app = express();

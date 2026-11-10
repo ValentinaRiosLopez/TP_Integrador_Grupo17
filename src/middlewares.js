@@ -80,6 +80,46 @@ export function requerirCliente(req, res, next) {
   next();
 }
 
+export function verificarCamposRequeridos(...campos) {
+  return (req, res, next) => {
+    const camposFaltantes = campos.filter((campo) => {
+      const valor = req.body?.[campo];
+
+      return typeof valor !== "string" || !valor.trim();
+    });
+
+    if (camposFaltantes.length > 0) {
+      return res.status(400).json({
+        error: `Campos requeridos: ${camposFaltantes.join(", ")}`,
+      });
+    }
+
+    next();
+  };
+}
+
+export function validarSesionActiva(req, res, next) {
+  const token = req.cookies?.autorizacion;
+
+  if (!token) {
+    return next();
+  }
+
+  try {
+    jwt.verify(token, secret);
+
+    return res.status(200).json({
+      mensaje: "Ya tenés una sesión activa",
+    });
+  } catch (error) {
+    res.clearCookie("autorizacion", {
+      path: "/",
+    });
+
+    return next();
+  }
+}
+
 
 //Middelware carrito
 

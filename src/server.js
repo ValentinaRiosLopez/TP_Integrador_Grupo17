@@ -14,6 +14,7 @@ import {
   setearCookieDeAutorizacion,
   leerCookieCliente,
   requerirCliente,
+  requerirAutorizacion,
   verificarCamposRequeridos,
   validarSesionActiva, 
   leerCarrito, 
@@ -159,7 +160,15 @@ app.get("/ticket", requerirCliente, (req, res) => {
 });
 
 app.get("/admin/login", (req, res) => {
-  res.render("admin/login");
+  res.render("admin/login", {
+    titulo: "Login | Administración",
+  });
+});
+
+app.get("/admin/dashboard", requerirAutorizacion, (req, res) => {
+  res.render("admin/dashboard", {
+    titulo: "Dashboard | Administración",
+  });
 });
 
 // ENDPOINTS
@@ -366,11 +375,6 @@ app.post(
 try {
   await connection.authenticate();
   connection.sync({});
-
-  // await Alumno.sync();
-
-  // const result = await Alumno.findAll();
-  // console.log(result);
 } catch (error) {
   console.error(error);
 }

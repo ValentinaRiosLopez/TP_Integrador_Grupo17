@@ -74,9 +74,14 @@ export function leerCookieCliente(req, res, next) {
 }
 
 //si pasa el tiempo de expiracion devuelve al cliente al login
+// Revisar si no deberíamos buscar en la req la cookie cliente
 export function requerirCliente(req, res, next) {
-  console.log({ req, res });
   if (!res.locals.cliente) return res.redirect("/");
+  next();
+}
+
+export function requerirAutorizacion(req, res, next) {
+  if (!req.cookies.autorizacion) return res.redirect("/admin/login");
   next();
 }
 

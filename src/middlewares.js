@@ -124,3 +124,24 @@ export function validarSesionActiva(req, res, next) {
     return next();
   }
 }
+
+
+//Middelware carrito
+
+export function leerCarrito(req) {
+  try {
+    const carrito = JSON.parse(req.cookies?.carrito ?? "[]");
+    return Array.isArray(carrito) ? carrito : [];
+  } catch {
+    return [];
+  }
+}
+
+export function guardarCarrito(res, carrito) {
+  res.cookie("carrito", JSON.stringify(carrito), {
+    path: "/",
+    httpOnly: true,
+    sameSite: "Lax",
+    maxAge: 24 * 60 * 60 * 1000, 
+  });
+}

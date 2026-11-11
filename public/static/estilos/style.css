@@ -146,6 +146,7 @@ header {
 #productos-destacados {
 
   text-align: center;
+  place-items: center;
 }
 
 #productos-destacados h2 {

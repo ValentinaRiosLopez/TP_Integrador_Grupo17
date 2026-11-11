@@ -108,6 +108,30 @@ WHERE NOT EXISTS (
     WHERE p.nombre = ejemplos.nombre AND p.tipo = 'juego'
 );
 
+INSERT INTO productos
+    (nombre, descripcion, precio, imagen, categoria, tipo, activo)
+SELECT
+    ejemplos.nombre, ejemplos.descripcion, ejemplos.precio,
+    ejemplos.imagen, 'Dados', 'dado', TRUE
+FROM (
+    SELECT 'Dado D4' AS nombre,
+           'Dado de 4 caras ideal para juegos de rol y aventuras.' AS descripcion,
+           3500.00 AS precio,
+           '/public/static/imagenes/dado-d4.jpg' AS imagen
+    UNION ALL SELECT 'Dado D6', 'Dado clásico de 6 caras para juegos de mesa.', 2500.00, '/public/static/imagenes/dado-d6.jpg'
+    UNION ALL SELECT 'Dado D8', 'Dado de 8 caras para juegos de rol y estrategia.', 3500.00, '/public/static/imagenes/dado-d8.jpg'
+    UNION ALL SELECT 'Dado D10', 'Dado de 10 caras para juegos de rol y cálculos de probabilidades.', 4000.00, '/public/static/imagenes/dado-d10.jpg'
+    UNION ALL SELECT 'Dado D12', 'Dado de 12 caras ideal para juegos de rol.', 4500.00, '/public/static/imagenes/dado-d12.jpg'
+    UNION ALL SELECT 'Dado D20', 'Dado de 20 caras utilizado en juegos de rol como Dungeons & Dragons.', 6000.00, '/public/static/imagenes/dado-d20.jpg'
+    UNION ALL SELECT 'Set de 7 dados para rol', 'Set de 7 dados de diferentes caras para juegos de rol y aventuras.', 22000.00, '/public/static/imagenes/set-rol.jpg'
+) AS ejemplos
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM productos AS p
+    WHERE p.nombre = ejemplos.nombre AND p.tipo = 'dado'
+);
+
+
 -- Verificación rápida (opcional):
 -- SHOW TABLES;
 -- SELECT id, nombre, precio, tipo, activo FROM productos;

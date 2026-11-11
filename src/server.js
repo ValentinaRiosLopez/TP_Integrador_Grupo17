@@ -73,57 +73,6 @@ app.set("views", path.join(carpetaRaiz, "views"));
 app.use("/public", express.static(path.join(carpetaRaiz, "public")));
 // Carpeta para archivos JS
 app.use("/js", express.static(path.join(__dirname, "js")));
-
-//======Funciones get productos=========
-//traigo los productos de la base de datos
-//despues capaz las cambio todas a una sola funcion que sea reutilizable
-async function getProductos() {
-  try {
-    const productos = await Productos.findAll({
-      where: {
-        activo: true,
-      },
-    });
-
-    return productos;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
-
-async function getJuegos() {
-  try {
-    const productos = await Productos.findAll({
-      where: {
-        activo: true,
-        tipo: "juego",
-      },
-    });
-
-    return productos;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
-
-async function getDados() {
-  try {
-    const productos = await Productos.findAll({
-      where: {
-        activo: true,
-        tipo: "dado",
-      },
-    });
-
-    return productos;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
-
 // RUTAS
 
 app.get("/", (req, res) => {
@@ -131,29 +80,23 @@ app.get("/", (req, res) => {
 });
 
 app.get("/productos", requerirCliente, async (req, res) => {
-  const productos = await getProductos();
-  if (!productos) return res.status(500).send("Error al obtener productos");
-  res.render("productos", { productos });
+  res.sendFile(path.join(carpetaRaiz, "public/static/", "productos.html"));
 });
 
 app.get("/productos/juegos", requerirCliente, async (req, res) => {
-  const productos = await getJuegos();
-  if (!productos) return res.status(500).send("Error al obtener productos");
-  res.render("productos", { productos });
+  res.sendFile(path.join(carpetaRaiz, "public/static/", "productos.html"));
 });
 
 app.get("/productos/dados", requerirCliente, async (req, res) => {
-  const productos = await getDados();
-  if (!productos) return res.status(500).send("Error al obtener productos");
-  res.render("productos", { productos });
+  res.sendFile(path.join(carpetaRaiz, "public/static/", "productos.html"));
 });
 
 app.get("/carrito", requerirCliente, (req, res) => {
-  res.render("carrito");
+  res.sendFile(path.join(carpetaRaiz, "public/static/", "carrito.html"));
 });
 
 app.get("/ticket", requerirCliente, (req, res) => {
-  res.render("ticket");
+  res.sendFile(path.join(carpetaRaiz, "public/static/", "ticket.html"));
 });
 
 app.get("/admin/login", (req, res) => {
@@ -186,6 +129,44 @@ app.get("/api/productos", async (req, res) => {
     });
   }
 });
+
+app.get("/api/productos/juegos", async (req, res) => {
+  try {
+    const productos = await Productos.findAll({
+      where: {
+        activo: true,
+        tipo: "juego",
+      },
+    });
+
+    res.status(200).json(productos);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Error al obtener juegos de mesa",
+    });
+  }
+});
+
+
+app.get("/api/productos/dados", async (req, res) => {
+  try {
+    const productos = await Productos.findAll({
+      where: {
+        activo: true,
+        tipo: "dado",
+      },
+    });
+
+    res.status(200).json(productos);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Error al obtener dados",
+    });
+  }
+});
+
 
 //Alta cliente
 //le setea la cookie y reenderiza la pagina sin el login

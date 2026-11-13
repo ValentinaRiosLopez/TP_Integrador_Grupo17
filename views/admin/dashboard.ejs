@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title><%= titulo %></title>
+    <link rel="stylesheet" href="/public/static/estilos/adminLogin.css" />
+    <link rel="stylesheet" href="/public/static/estilos/adminDashboard.css" />
   </head>
 
   <body class="admin-login-page">
     <header class="admin-header">
       <a href="/" class="admin-brand">
         <img src="/public/static/imagenes/logo.png" alt="Logo" />
-        <span>Autoservicio de juegos</span>
+        <span><%= titulo %></span>
       </a>
 
       <nav>
@@ -20,7 +22,79 @@
     </header>
 
     <main class="admin-login-main">
-      <h1>COMPLETAR...</h1>
+      
+      <section id="ABM">
+        <button id="btn-agregar-producto" class="btn-primary">Agregar producto</button>
+      </section>
+      <section id="gestion-productos">
+        <h2>Listado de productos</h2>
+
+        <table id="tabla-productos">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Imagen</th>
+              <th>Nombre</th>
+              <th>Categoría</th>
+              <th>Tipo</th>
+              <th>Precio</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% productos.forEach((producto) => { %>
+              <tr>
+                <td><%= producto.id %></td>
+
+                <td>
+                  <% if (producto.imagen) { %>
+                    <img
+                      class="imagen-producto"
+                      src="<%= producto.imagen %>"
+                      alt="<%= producto.nombre %>"
+                    />
+                  <% } else { %>
+                    Sin imagen
+                  <% } %>
+                </td>
+
+                <td><%= producto.nombre %></td>
+                <td><%= producto.categoria %></td>
+                <td><%= producto.tipo %></td>
+
+                <td>
+                  $<%= Number(producto.precio).toLocaleString("es-AR") %>
+                </td>
+
+                <td>
+                  <% if (producto.activo) { %>
+                    <span class="estado-activo">Activo</span>
+                  <% } else { %>
+                    <span class="estado-inactivo">Inactivo</span>
+                  <% } %>
+                </td>
+                <td>
+                  <button
+                    class="btn-editar-producto"
+                    data-id="<%= producto.id %>"
+                  >
+                            <img class="icono-boton" src="/public/static/iconos/modify.png" alt="logo modificar" />Editar
+                  </button>
+
+                  <button
+                    class="btn-eliminar-producto"
+                    data-id="<%= producto.id %>"
+                  >
+                    <img class="icono-boton" src="/public/static/iconos/delete.png" alt="logo eliminar" />Eliminar
+                  </button>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </section>
     </main>
   </body>
 </html>
+

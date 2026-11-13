@@ -16,9 +16,9 @@ import {
   requerirCliente,
   requerirAutorizacion,
   verificarCamposRequeridos,
-  validarSesionActiva, 
-  leerCarrito, 
-  guardarCarrito
+  validarSesionActiva,
+  leerCarrito,
+  guardarCarrito,
 } from "./middlewares.js";
 
 const app = express();
@@ -107,10 +107,20 @@ app.get("/admin/login", (req, res) => {
   });
 });
 
-app.get("/admin/dashboard", requerirAutorizacion, (req, res) => {
-  res.render("admin/dashboard", {
-    titulo: "Dashboard | Administración",
-  });
+app.get("/admin/dashboard", requerirAutorizacion, async (req, res) => {
+  try {
+    const productos = await Productos.findAll({
+      order: [["id", "ASC"]],
+    });
+
+    return res.render("admin/dashboard", {
+      titulo: "Dashboard | Administración",
+      productos,
+    });
+  } catch (error) {
+    console.error("Error al obtener productos:", error);
+    res.status(500).send("Error al cargar el dashboard");
+  }
 });
 
 // ENDPOINTS
@@ -150,7 +160,6 @@ app.get("/api/productos/juegos", async (req, res) => {
   }
 });
 
-
 app.get("/api/productos/dados", async (req, res) => {
   try {
     const productos = await Productos.findAll({
@@ -168,7 +177,6 @@ app.get("/api/productos/dados", async (req, res) => {
     });
   }
 });
-
 
 //Alta cliente
 //le setea la cookie y reenderiza la pagina sin el login
@@ -213,13 +221,14 @@ async function detalleCarrito(req) {
   const items = carrito.flatMap(({ id, cantidad }) => {
     const producto = productos.find((p) => p.id === id);
     if (!producto) return []; // producto dado de baja: se ignora
-    return [{ producto, cantidad, subtotal: Number(producto.precio) * cantidad }];
+    return [
+      { producto, cantidad, subtotal: Number(producto.precio) * cantidad },
+    ];
   });
 
   const total = items.reduce((acc, i) => acc + i.subtotal, 0);
   return { items, total };
 }
-
 
 //=======ENDPOINTS CARRITO==========
 
@@ -247,7 +256,6 @@ app.post("/carrito", requerirCliente, async (req, res) => {
   guardarCarrito(res, carrito); //guarda el carrito
   res.redirect(req.get("referer") || "/productos"); // vuelve a donde estaba
 });
-
 
 // ENDPOINTS Admin //
 // Alta de usuarios

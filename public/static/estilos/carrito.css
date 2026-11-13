@@ -69,3 +69,37 @@ h2 {
   border-top: 1px solid rgb(15,24,10);
   background-color: rgb(131,142,87);
 }
+
+#carrito button{
+  color: rgb(15,24,10);
+  background-color: rgb(131,142,87);
+  border-radius: 5px;
+  border: 2px solid rgb(15,24,10);
+  padding: 2px;
+  margin: 5px;
+}
+
+#carrito button:hover{
+  background-color: rgb(90,106,49);
+  text-decoration: underline;
+}
+
+#div-comprar{
+  text-align: center;
+  margin:15px;
+  
+}
+
+#btn-comprar{
+  width: 30vw;
+  padding:15px;
+  border: 1px solid rgb(198,199,166);
+  border-radius: 10px;
+  background-color: rgb(56,73,41);
+  color: rgb(198,199,166);
+}
+
+#btn-comprar:hover{
+  background-color: rgb(31,45,19);
+  text-decoration: underline;
+}

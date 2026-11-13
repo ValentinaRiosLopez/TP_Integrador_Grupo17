@@ -131,4 +131,57 @@ async function llenarCarrito(){
     
 }
 
+async function vaciarCarrito(){
+  try {
+    const response = await fetch("/carrito/vaciar", { method: "DELETE" });
+
+    if (response.status === 401) {
+      location.href = "/";
+      return;
+    }
+    if (!response.ok) {
+      alert("No se pudo vaciar el carrito");
+    }
+  } catch {
+    alert("Falló el vaciado.");
+  }
+
+  llenarCarrito();
+}
+
+async function realizarCompra(){
+  $("btn-comprar").disabled = true;
+  $("btn-vaciar").disabled = true;
+
+  try {
+    const response = await fetch("/api/carrito/comprar", { method: "POST" });
+
+    //si no esta identificado el cliente
+    if (response.status === 401) {
+      location.href = "/";
+      return;
+    }
+
+    if (response.status === 400) {
+      alert("Error carrito vacio.");
+      return;
+    }
+
+    if (!response.ok) {
+      alert("Error en la compra.");
+      $("btn-comprar").disabled = false;
+      $("btn-vaciar").disabled = false;
+    }
+
+    location.href = `/ticket`;
+  } catch {
+    alert("Error en la compra.");
+    $("btn-comprar").disabled = false;
+    $("btn-vaciar").disabled = false;
+    
+  }  
+}
+
+$("btn-vaciar").addEventListener("click",()=>{ vaciarCarrito() });
+$("btn-comprar").addEventListener("click", ()=>{realizarCompra()})
 llenarCarrito();

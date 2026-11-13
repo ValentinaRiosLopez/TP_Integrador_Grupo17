@@ -5,6 +5,8 @@ import { envs } from "./config/env.js";
 import { connection } from "./config/db_config.js";
 import Productos from "./modelos/productos.js";
 import Usuarios from "./modelos/usuarios.js";
+import Ventas from "./modelos/ventas.js";
+import DetalleVenta from "./modelos/detalleVenta.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import bcrypt from "bcrypt";
@@ -18,7 +20,8 @@ import {
   verificarCamposRequeridos,
   validarSesionActiva, 
   leerCarrito, 
-  guardarCarrito
+  guardarCarrito,
+  requerirClienteApi
 } from "./middlewares.js";
 
 const app = express();
@@ -113,9 +116,9 @@ app.get("/admin/dashboard", requerirAutorizacion, (req, res) => {
   });
 });
 
-// ENDPOINTS
+// ENDPOINTS PRODUCTOS
 
-app.get("/api/productos", async (req, res) => {
+app.get("/api/productos", requerirClienteApi ,async (req, res) => {
   try {
     const productos = await Productos.findAll({
       where: {
@@ -132,7 +135,7 @@ app.get("/api/productos", async (req, res) => {
   }
 });
 
-app.get("/api/productos/juegos", async (req, res) => {
+app.get("/api/productos/juegos", requerirClienteApi,async (req, res) => {
   try {
     const productos = await Productos.findAll({
       where: {
@@ -151,7 +154,7 @@ app.get("/api/productos/juegos", async (req, res) => {
 });
 
 
-app.get("/api/productos/dados", async (req, res) => {
+app.get("/api/productos/dados", requerirClienteApi ,async (req, res) => {
   try {
     const productos = await Productos.findAll({
       where: {
@@ -170,6 +173,8 @@ app.get("/api/productos/dados", async (req, res) => {
 });
 
 
+
+
 //Alta cliente
 //le setea la cookie y reenderiza la pagina sin el login
 app.post("/", setearCookieCliente, (req, res) => {
@@ -179,6 +184,7 @@ app.post("/", setearCookieCliente, (req, res) => {
 //Baja cliente
 //borra la cookie y vuelve a mostrar el login
 app.post("/salir", (req, res) => {
+  res.clearCookie("carrito");
   res.clearCookie("cliente", { path: "/" });
   res.redirect("/");
 });
@@ -255,7 +261,7 @@ app.post("/carrito", requerirCliente, async (req, res) => {
   res.redirect(req.get("referer") || "/productos"); // vuelve a donde estaba
 });
 
-app.get("/api/carrito", requerirCliente, async(req, res)=>{
+app.get("/api/carrito", requerirClienteApi, async(req, res)=>{
   try {
     const { items, total } = await detalleCarrito(req);
     res.status(200).json({ items, total });
@@ -266,7 +272,7 @@ app.get("/api/carrito", requerirCliente, async(req, res)=>{
 });
 
 //actualiza la cantidad
-app.patch("/api/carrito/:id", requerirCliente, (req, res) => {
+app.patch("/api/carrito/:id", requerirClienteApi, (req, res) => {
   const id = Number(req.params.id);
   const cantidad = Number(req.body?.cantidad);
 
@@ -287,7 +293,7 @@ app.patch("/api/carrito/:id", requerirCliente, (req, res) => {
 });
 
 //elimina un producto del carrito
-app.delete("/api/carrito/:id", requerirCliente, (req, res) => {
+app.delete("/api/carrito/:id", requerirClienteApi, (req, res) => {
   const id = Number(req.params.id);
 
   if (!Number.isInteger(id)) {
@@ -299,6 +305,61 @@ app.delete("/api/carrito/:id", requerirCliente, (req, res) => {
   res.status(200).json({ id });
 });
 
+//vacia el carrito
+app.delete("/carrito/vaciar", requerirClienteApi, (req, res) => {
+  res.clearCookie("carrito", { path: "/" });
+  res.status(200).json({ ok: true });
+});
+
+
+app.post("/api/carrito/comprar", requerirClienteApi, async (req, res)=>{
+  try{
+    const { items, total } = await detalleCarrito(req);
+
+    if (items.length === 0) {
+      return res.status(400).json({ error: "El carrito está vacío." });
+    }
+
+    const venta = await connection.transaction(async (t) => {
+      const ventaNueva = await Ventas.create(
+        {
+          nombre_cliente: res.locals.cliente.name.slice(0, 100),
+          total,
+        },
+        { transaction: t },  
+      );
+
+      await DetalleVenta.bulkCreate(
+        items.map(({ producto, cantidad, subtotal }) => ({
+          id_venta: ventaNueva.id,
+          id_producto: producto.id,
+          cantidad,
+          subtotal,
+        })),
+        { transaction: t },
+      );
+
+      return ventaNueva;
+    }); 
+
+    res.clearCookie("carrito", { path: "/" });
+    res.status(201).json({ id: venta.id });
+
+  }catch(error){
+    console.error(error);
+    res.status(500).json({ error: "Error al registrar la compra" });
+  }
+  
+});
+
+//RELACIONES VENTAS
+Ventas.hasMany(DetalleVenta, { foreignKey: "id_venta" });
+DetalleVenta.belongsTo(Ventas, { foreignKey: "id_venta" });
+
+DetalleVenta.belongsTo(Productos, { foreignKey: "id_producto" });
+Productos.hasMany(DetalleVenta, { foreignKey: "id_producto" });
+
+//FUNCIONES VENTAS
 
 // ENDPOINTS Admin //
 // Alta de usuarios

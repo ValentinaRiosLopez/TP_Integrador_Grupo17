@@ -59,8 +59,8 @@ async function getProductos() {
 
         const formulario = document.createElement("form");
         formulario.className = `form-agregar`;
-        // formulario.action = "/carrito";
-        // formulario.method = "POST";
+        formulario.action = "/carrito";
+        formulario.method = "POST";
 
         const inputId = document.createElement("input");
         inputId.type = "hidden";
@@ -75,7 +75,7 @@ async function getProductos() {
         cantidad.max = 10;
 
         const boton = document.createElement("button");
-        // boton.type = "submit";
+        boton.type = "submit";
         boton.textContent = "Agregar al carrito";
 
         formulario.append(inputId, cantidad, boton);

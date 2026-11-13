@@ -21,24 +21,85 @@ h2 {
  border-radius: 12px;
 }
 
-#items-carrito {
-  min-height: 10vh;
-  width: 100%;
-  
-  margin-left: 50px;
-  margin-right: 50px;
+#tabla-carrito{
+  width: 90%;
+  border-collapse: collapse;
+  margin: 10px;
+}
+
+#tabla-carrito td{
+  padding: 5px;
+}
+
+#tabla-carrito td{
+  color: rgb(15,24,10);
   
 }
 
-#total{
- background-color: rgb(131,142,87);
- width: 100%;
- border-radius: 12px;
+.col-descripcion{
+  width: 70%;
+}
 
+.col-importe{
+  text-align: right;
 }
 
 
+#fila-titulos{
+  border-bottom: 1px solid rgb(15,24,10) ;
+}
 
-#total-carrito {
-  background-color: rgb(131, 142, 87);
+#total-compra{
+  text-align: right;
+
+}
+
+#productos-carrito input{
+  color: rgb(15,24,10);
+}
+
+.eliminar-producto {
+  display: none;
+}
+
+#productos-carrito tr:hover .eliminar-producto {
+  display: block;
+}
+#fila-total{
+  border-top: 1px solid rgb(15,24,10);
+  background-color: rgb(131,142,87);
+}
+
+#carrito button{
+  color: rgb(15,24,10);
+  background-color: rgb(131,142,87);
+  border-radius: 5px;
+  border: 2px solid rgb(15,24,10);
+  padding: 2px;
+  margin: 5px;
+}
+
+#carrito button:hover{
+  background-color: rgb(90,106,49);
+  text-decoration: underline;
+}
+
+#div-comprar{
+  text-align: center;
+  margin:15px;
+  
+}
+
+#btn-comprar{
+  width: 30vw;
+  padding:15px;
+  border: 1px solid rgb(198,199,166);
+  border-radius: 10px;
+  background-color: rgb(56,73,41);
+  color: rgb(198,199,166);
+}
+
+#btn-comprar:hover{
+  background-color: rgb(31,45,19);
+  text-decoration: underline;
 }

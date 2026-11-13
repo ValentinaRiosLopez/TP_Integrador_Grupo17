@@ -123,6 +123,7 @@ header {
 
 #contenido{
   place-items: center;
+  justify-items: center;
 }
 
 #sobre-nosotros {

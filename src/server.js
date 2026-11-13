@@ -206,14 +206,20 @@ async function detalleCarrito(req) {
   const carrito = leerCarrito(req);
   if (carrito.length === 0) return { items: [], total: 0 };
 
-  const productos = await Productos.findAll({
+    const productos = await Productos.findAll({
     where: { id: carrito.map((i) => i.id), activo: true },
   });
 
   const items = carrito.flatMap(({ id, cantidad }) => {
     const producto = productos.find((p) => p.id === id);
-    if (!producto) return []; // producto dado de baja: se ignora
-    return [{ producto, cantidad, subtotal: Number(producto.precio) * cantidad }];
+    if (!producto) return []; // dado de baja: se ignora
+    return [
+      {
+        producto: producto.toJSON(),
+        cantidad,
+        subtotal: Number(producto.precio) * cantidad,
+      },
+    ];
   });
 
   const total = items.reduce((acc, i) => acc + i.subtotal, 0);
@@ -242,10 +248,55 @@ app.post("/carrito", requerirCliente, async (req, res) => {
   if (item) item.cantidad = Math.min(10, item.cantidad + cantidad);
   else carrito.push({ id, cantidad });
 
-  console.log(carrito);
+  
 
   guardarCarrito(res, carrito); //guarda el carrito
+  
   res.redirect(req.get("referer") || "/productos"); // vuelve a donde estaba
+});
+
+app.get("/api/carrito", requerirCliente, async(req, res)=>{
+  try {
+    const { items, total } = await detalleCarrito(req);
+    res.status(200).json({ items, total });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al obtener el carrito" });
+  }
+});
+
+//actualiza la cantidad
+app.patch("/api/carrito/:id", requerirCliente, (req, res) => {
+  const id = Number(req.params.id);
+  const cantidad = Number(req.body?.cantidad);
+
+  if (!Number.isInteger(id) || !Number.isInteger(cantidad)) {
+    return res.status(400).json({ error: "Datos inválidos" });
+  }
+  if (cantidad < 1 || cantidad > 10) {
+    return res.status(400).json({ error: "La cantidad debe estar entre 1 y 10" });
+  }
+
+  const carrito = leerCarrito(req);
+  const item = carrito.find((i) => i.id === id);
+  if (!item) return res.status(404).json({ error: "El producto no está en el carrito" });
+
+  item.cantidad = cantidad;
+  guardarCarrito(res, carrito);
+  res.status(200).json({ id, cantidad });
+});
+
+//elimina un producto del carrito
+app.delete("/api/carrito/:id", requerirCliente, (req, res) => {
+  const id = Number(req.params.id);
+
+  if (!Number.isInteger(id)) {
+    return res.status(400).json({ error: "Producto inválido" });
+  }
+
+  const carrito = leerCarrito(req).filter((i) => i.id !== id);
+  guardarCarrito(res, carrito);
+  res.status(200).json({ id });
 });
 
 

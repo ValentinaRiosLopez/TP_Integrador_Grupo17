@@ -110,10 +110,20 @@ app.get("/admin/login", (req, res) => {
   });
 });
 
-app.get("/admin/dashboard", requerirAutorizacion, (req, res) => {
-  res.render("admin/dashboard", {
-    titulo: "Dashboard | Administración",
-  });
+app.get("/admin/dashboard", requerirAutorizacion, async (req, res) => {
+  try {
+    const productos = await Productos.findAll({
+      order: [["id", "ASC"]],
+    });
+
+    return res.render("admin/dashboard", {
+      titulo: "Dashboard | Administración",
+      productos,
+    });
+  } catch (error) {
+    console.error("Error al obtener productos:", error);
+    res.status(500).send("Error al cargar el dashboard");
+  }
 });
 
 // ENDPOINTS PRODUCTOS
@@ -172,9 +182,6 @@ app.get("/api/productos/dados", requerirClienteApi ,async (req, res) => {
   }
 });
 
-
-
-
 //Alta cliente
 //le setea la cookie y reenderiza la pagina sin el login
 app.post("/", setearCookieCliente, (req, res) => {
@@ -231,7 +238,6 @@ async function detalleCarrito(req) {
   const total = items.reduce((acc, i) => acc + i.subtotal, 0);
   return { items, total };
 }
-
 
 //=======ENDPOINTS CARRITO==========
 

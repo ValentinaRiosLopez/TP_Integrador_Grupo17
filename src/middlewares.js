@@ -12,7 +12,6 @@ async function generarJWT(payload) {
   return token;
 }
 
-
 export async function setearCookieDeAutorizacion(req, res, next = () => {}) {
   const usuario = req.usuarioAutenticado;
 
@@ -100,8 +99,19 @@ export function requerirClienteApi(req, res, next) {
 }
 
 export function requerirAutorizacion(req, res, next) {
-  if (!req.cookies.autorizacion) return res.redirect("/admin/login");
-  next();
+  const token = req.cookies?.autorizacion;
+
+  if (!token) {
+    return res.redirect("/admin/login");
+  }
+
+  try {
+    req.admin = jwt.verify(token, secret);
+    return next();
+  } catch (error) {
+    res.clearCookie("autorizacion");
+    return res.redirect("/admin/login");
+  }
 }
 
 export function verificarCamposRequeridos(...campos) {
@@ -144,7 +154,6 @@ export function validarSesionActiva(req, res, next) {
   }
 }
 
-
 //Middelware carrito
 
 export function leerCarrito(req) {
@@ -161,7 +170,7 @@ export function guardarCarrito(res, carrito) {
     path: "/",
     httpOnly: true,
     sameSite: "Lax",
-    maxAge: 24 * 60 * 60 * 1000, 
+    maxAge: 24 * 60 * 60 * 1000,
   });
 }
 
@@ -173,10 +182,3 @@ export function requerirCompra(req, res, next) {
   if (!res.locals.cliente?.compra) return res.redirect("/carrito");
   next();
 }
-
-
-
-
-
-
-

@@ -36,15 +36,8 @@ export async function setearCookieDeAutorizacion(req, res, next = () => {}) {
   next();
 }
 
-//seteo la cookie de cliente
-export async function setearCookieCliente(req, res, next) {
-  const name = req.body?.name?.trim();
-  const token = await generarJWT({
-    name,
-  });
-
-  if (!name) return res.redirect("/");
-
+export async function emitirCookieCliente(res, { name, compra = null }) {
+  const token = await generarJWT({ name, compra });
   res.cookie("cliente", token, {
     path: "/",
     httpOnly: true,
@@ -52,9 +45,24 @@ export async function setearCookieCliente(req, res, next) {
     sameSite: "Lax",
     maxAge: 1000 * 60 * 10,
   });
+}
+
+//seteo la cookie de cliente
+export async function setearCookieCliente(req, res, next) {
+  const name = req.body?.name?.trim();
+  const token = await generarJWT({
+    name,
+    compra: null,
+  });
+
+  if (!name) return res.redirect("/");
+
+  await emitirCookieCliente(res, { name });
 
   next();
 }
+
+
 
 export function leerCookieCliente(req, res, next) {
   res.locals.cliente = null; //aca inicializo la variable de cliente para que siempre exista
@@ -65,7 +73,9 @@ export function leerCookieCliente(req, res, next) {
     try {
       res.locals.cliente = jwt.verify(token, secret); //verifico el token y lo guardo en locals para poder usar el nombre despues
     } catch {
-      res.clearCookie("cliente", { path: "/" }); //sino borra la cookie invalida
+      //sino borra la cookie invalida
+      res.clearCookie("cliente", { path: "/" });
+      res.clearCookie("carrito", { path: "/" }); 
     }
   }
   next();
@@ -74,7 +84,10 @@ export function leerCookieCliente(req, res, next) {
 //si pasa el tiempo de expiracion devuelve al cliente al login
 // Revisar si no deberíamos buscar en la req la cookie cliente
 export function requerirCliente(req, res, next) {
-  if (!res.locals.cliente) return res.redirect("/");
+  if (!res.locals.cliente){
+    
+    return res.redirect("/");
+  } 
   next();
 }
 
@@ -159,4 +172,13 @@ export function guardarCarrito(res, carrito) {
     sameSite: "Lax",
     maxAge: 24 * 60 * 60 * 1000,
   });
+}
+
+//midelware si ya hizo una compra
+
+
+
+export function requerirCompra(req, res, next) {
+  if (!res.locals.cliente?.compra) return res.redirect("/carrito");
+  next();
 }

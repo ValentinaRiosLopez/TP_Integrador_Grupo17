@@ -21,7 +21,9 @@ import {
   validarSesionActiva, 
   leerCarrito, 
   guardarCarrito,
-  requerirClienteApi
+  requerirClienteApi,
+  emitirCookieCliente,
+  requerirCompra
 } from "./middlewares.js";
 
 const app = express();
@@ -81,7 +83,7 @@ app.use("/js", express.static(path.join(__dirname, "js")));
 // RUTAS
 
 app.get("/", (req, res) => {
-  res.render("index");
+  res.sendFile(path.join(carpetaRaiz, "public/static/", "index.html"));
 });
 
 app.get("/productos", requerirCliente, async (req, res) => {
@@ -100,7 +102,11 @@ app.get("/carrito", requerirCliente, (req, res) => {
   res.sendFile(path.join(carpetaRaiz, "public/static/", "carrito.html"));
 });
 
-app.get("/ticket", requerirCliente, (req, res) => {
+app.get("/ticket", requerirCliente, requerirCompra,(req, res) => {
+  const compra = res.locals.cliente.compra;
+  if (Number(req.query.venta) !== compra) {
+    return res.redirect(`/ticket?venta=${compra}`);
+  }
   res.sendFile(path.join(carpetaRaiz, "public/static/", "ticket.html"));
 });
 
@@ -182,6 +188,9 @@ app.get("/api/productos/dados", requerirClienteApi ,async (req, res) => {
   }
 });
 
+
+
+//=======ENDPOINTS CLIENTE========
 //Alta cliente
 //le setea la cookie y reenderiza la pagina sin el login
 app.post("/", setearCookieCliente, (req, res) => {
@@ -194,6 +203,14 @@ app.post("/salir", (req, res) => {
   res.clearCookie("carrito");
   res.clearCookie("cliente", { path: "/" });
   res.redirect("/");
+});
+
+app.get("/api/cliente", (req, res)=>{
+  const cliente = res.locals.cliente;
+  res.status(200).json({
+    name: cliente?.name ?? null,
+    compra: cliente?.compra ?? null,
+  });
 });
 
 //==== ENDPOINS IMAGENES ====
@@ -260,10 +277,13 @@ app.post("/carrito", requerirCliente, async (req, res) => {
   if (item) item.cantidad = Math.min(10, item.cantidad + cantidad);
   else carrito.push({ id, cantidad });
 
-  
-
   guardarCarrito(res, carrito); //guarda el carrito
   
+  //si el mismo cliente quiere hacer otra compra
+  if (res.locals.cliente.compra) {
+    await emitirCookieCliente(res, { name: res.locals.cliente.name });
+  }
+
   res.redirect(req.get("referer") || "/productos"); // vuelve a donde estaba
 });
 
@@ -349,6 +369,12 @@ app.post("/api/carrito/comprar", requerirClienteApi, async (req, res)=>{
     }); 
 
     res.clearCookie("carrito", { path: "/" });
+
+    await emitirCookieCliente(res, {
+      name: res.locals.cliente.name,
+      compra: venta.id,
+    });
+
     res.status(201).json({ id: venta.id });
 
   }catch(error){
@@ -359,13 +385,60 @@ app.post("/api/carrito/comprar", requerirClienteApi, async (req, res)=>{
 });
 
 //RELACIONES VENTAS
-Ventas.hasMany(DetalleVenta, { foreignKey: "id_venta" });
+Ventas.hasMany(DetalleVenta, { foreignKey: "id_venta", as: "detalles"});
 DetalleVenta.belongsTo(Ventas, { foreignKey: "id_venta" });
 
-DetalleVenta.belongsTo(Productos, { foreignKey: "id_producto" });
+DetalleVenta.belongsTo(Productos, { foreignKey: "id_producto", as: "producto" });
 Productos.hasMany(DetalleVenta, { foreignKey: "id_producto" });
 
-//FUNCIONES VENTAS
+//====ENDPOINTS TICKET=====
+
+app.get("/api/venta/:id", requerirClienteApi, async (req, res)=>{
+  const id = Number(req.params.id);
+
+  if (!Number.isInteger(id)) {
+    return res.status(400).json({ error: "ERROR ID Invalido." });
+  }
+
+try {
+
+    // 404 si no existe o si es de otro cliente (no revela que existe)
+    if (res.locals.cliente.compra !== id) {
+      return res.status(404).json({ error: "Venta no encontrada" });
+    }
+
+    const venta = await Ventas.findByPk(id, {
+      include: {
+        model: DetalleVenta,
+        as: "detalles",
+        include: { model: Productos, as: "producto" },
+      },
+    });
+
+    if(!venta){
+      return res.status(404).json({ error: "Venta no encontrada" });
+    }
+
+    res.status(200).json({
+      id: venta.id,
+      nombre_cliente: venta.nombre_cliente,
+      fecha: venta.fecha,
+      total: Number(venta.total),
+      items: venta.detalles.map((d) => ({
+        producto: {
+          id: d.id_producto,
+          nombre: d.producto?.nombre ?? "Producto eliminado",
+        },
+        cantidad: d.cantidad,
+        subtotal: Number(d.subtotal),
+      })),
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al obtener la venta" });
+  }
+});
 
 // ENDPOINTS Admin //
 // Alta de usuarios

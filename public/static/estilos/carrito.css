@@ -28,12 +28,8 @@ h2 {
 }
 
 #tabla-carrito td{
-  padding: 5px;
-}
-
-#tabla-carrito td{
   color: rgb(15,24,10);
-  
+  padding: 5px;
 }
 
 .col-descripcion{
@@ -58,13 +54,6 @@ h2 {
   color: rgb(15,24,10);
 }
 
-.eliminar-producto {
-  display: none;
-}
-
-#productos-carrito tr:hover .eliminar-producto {
-  display: block;
-}
 #fila-total{
   border-top: 1px solid rgb(15,24,10);
   background-color: rgb(131,142,87);

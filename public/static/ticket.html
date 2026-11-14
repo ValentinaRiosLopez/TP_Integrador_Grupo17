@@ -34,12 +34,50 @@
               </ul>
             </li>
             <li id="li-carrito"><a href="/carrito">Carrito</a></li>
-            <li id="li-ticket"><a href="/ticket">Ticket</a></li>
+            <li id="li-ticket"><a href="/ticket" id="link-ticket">Ticket</a></li>
           </ul>
         </nav>
       </div>
     </header>
-    <main id="contenido"></main>
+    <main id="contenido">
+      <div id="ticket">
+        <div id="datos">
+          <p class="titulo">LUDONAUTICA</p>
+          
+          <p>Compra Nº<span id="id-compra"></span></p>
+          
+          <p>Cliente: <span id="nombre-cliente"></span></p>
+          
+          <p>Fecha: <span id="fecha-compra"></span></p>
+          <br>
+        </div>
+        <div id="detalle">
+          <p class="titulo">Detalle</p>
+          <table id="tbl-detalle">
+            <thead>
+              <tr class="fila">
+                <td>Cant.</td>
+                <td class="col-descripcion">Descripcion</td>
+                <td class="col-importe">Importe</td>
+              </tr>
+            </thead>
+            <tbody id="detalle-productos"></tbody>
+            <tfoot id="total-carrito">
+              <tr class="fila">
+                <td>Total:</td>
+                <td id="total-compra" colspan="3">0.00</td>
+              </tr>
+            </tfoot>            
+          </table>
+        </div>
+        <p>¡Gracias por comprar en ludonautica! :)</p>
+        
+      </div>
+
+      <div id="div-descargar">
+        <button id="btn-descargar">Descargar como PDF</button> 
+      </div>
+    </main>
     <footer>
       <section id="info-contacto">
         <h3>Contacto</h3>
@@ -51,5 +89,7 @@
         </div>
       </section>
     </footer>
+    <script src="/public/static/js/estadoCompra.js"></script>
+    <script src="/public/static/js/ticket.js"></script>
   </body>
 </html>

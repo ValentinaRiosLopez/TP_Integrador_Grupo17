@@ -57,7 +57,9 @@ CREATE TABLE `productos` (
 -- Volcado de datos para la tabla `productos`
 --
 
-INSERT INTO `productos` (`id`, `nombre`, `descripcion`, `precio`, `imagen`, `categoria`, `tipo`, `activo`, `createdAt`, `updatedAt`) VALUES
+INSERT INTO `productos`
+(`id`, `nombre`, `descripcion`, `precio`, `imagen`, `categoria`, `tipo`, `activo`, `createdAt`, `updatedAt`)
+VALUES
 (1, 'Catan', 'Juego de estrategia y comercio para 3 a 4 jugadores.', 65000.00, '/public/static/imagenes/catan.jpg', 'Juegos de mesa', 'juego', 1, '2026-11-04 16:51:25', '2026-11-06 17:17:35'),
 (2, 'Carcassonne', 'Juego de colocación de losetas y construcción de ciudades.', 48000.00, '/public/static/imagenes/carcassonne.jpg', 'Juegos de mesa', 'juego', 1, '2026-11-04 16:51:25', '2026-11-06 17:17:35'),
 (3, 'Dixit', 'Juego de creatividad, imaginación y asociación de imágenes.', 55000.00, '/public/static/imagenes/dixit.jpg', 'Juegos de mesa', 'juego', 1, '2026-11-04 16:51:25', '2026-11-06 17:17:35'),
@@ -67,7 +69,15 @@ INSERT INTO `productos` (`id`, `nombre`, `descripcion`, `precio`, `imagen`, `cat
 (7, 'Exploding Kittens', 'Juego de cartas de estrategia, humor y eliminación.', 32000.00, '/public/static/imagenes/exploding-kittens.jpg', 'Juegos de mesa', 'juego', 1, '2026-11-04 16:51:25', '2026-11-06 17:17:35'),
 (8, 'Código Secreto', 'Juego de palabras, deducción y trabajo en equipo.', 38000.00, '/public/static/imagenes/codigo-secreto.jpg', 'Juegos de mesa', 'juego', 1, '2026-11-04 16:51:25', '2026-11-06 17:17:35'),
 (9, 'Virus!', 'Juego de cartas donde los jugadores compiten por completar un cuerpo sano.', 23000.00, '/public/static/imagenes/virus!.jpg', 'Juegos de mesa', 'juego', 1, '2026-11-04 16:51:25', '2026-11-06 17:17:35'),
-(10, 'Kingdomino', 'Juego de estrategia y construcción de reinos mediante fichas de dominó.', 42000.00, '/public/static/imagenes/kingdomino.jpg', 'Juegos de mesa', 'juego', 1, '2026-11-04 16:51:25', '2026-11-06 17:17:35');
+(10, 'Kingdomino', 'Juego de estrategia y construcción de reinos mediante fichas de dominó.', 42000.00, '/public/static/imagenes/kingdomino.jpg', 'Juegos de mesa', 'juego', 1, '2026-11-04 16:51:25', '2026-11-06 17:17:35'),
+
+(11, 'Dado D4', 'Dado de 4 caras ideal para juegos de rol y aventuras.', 3500.00, '/public/static/imagenes/dado-d4.jpg', 'Dados', 'dado', 1, NOW(), NOW()),
+(12, 'Dado D6', 'Dado clásico de 6 caras para juegos de mesa.', 2500.00, '/public/static/imagenes/dado-d6.jpg', 'Dados', 'dado', 1, NOW(), NOW()),
+(13, 'Dado D8', 'Dado de 8 caras para juegos de rol y estrategia.', 3500.00, '/public/static/imagenes/dado-d8.jpg', 'Dados', 'dado', 1, NOW(), NOW()),
+(14, 'Dado D10', 'Dado de 10 caras para juegos de rol y cálculos de probabilidades.', 4000.00, '/public/static/imagenes/dado-d10.jpg', 'Dados', 'dado', 1, NOW(), NOW()),
+(15, 'Dado D12', 'Dado de 12 caras ideal para juegos de rol.', 4500.00, '/public/static/imagenes/dado-d12.jpg', 'Dados', 'dado', 1, NOW(), NOW()),
+(16, 'Dado D20', 'Dado de 20 caras utilizado en juegos de rol como Dungeons & Dragons.', 6000.00, '/public/static/imagenes/dado-d20.jpg', 'Dados', 'dado', 1, NOW(), NOW()),
+(17, 'Set de 7 dados para rol', 'Set de 7 dados de diferentes caras para juegos de rol y aventuras.', 22000.00, '/public/static/imagenes/set-rol.jpg', 'Dados', 'dado', 1, NOW(), NOW());
 
 -- --------------------------------------------------------
 

@@ -1,3 +1,4 @@
+server
 import express from "express";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -104,10 +105,8 @@ app.get("/carrito", requerirCliente, (req, res) => {
   res.sendFile(path.join(carpetaRaiz, "public/static/", "carrito.html"));
 });
 
-app.get("/ticket", requerirCliente, requerirCompra,(req, res) => {
+app.get("/ticket", requerirCliente, requerirCompra, (req, res) => {
   const compra = res.locals.cliente.compra;
-
-  //si manda al id equivocado renderiza igual la compra que hizo
   if (Number(req.query.venta) !== compra) {
     return res.redirect(`/ticket?venta=${compra}`);
   }
@@ -134,9 +133,31 @@ app.get("/admin/dashboard", requerirAutorizacion, async (req, res) => {
   }
 });
 
+app.get("/admin/productos/nuevo", requerirAutorizacion, async (req, res) => {
+  res.render("admin/newProduct", {
+    titulo: "Productos | Alta",
+    modo: "nuevo",
+    productoID: null,
+  });
+});
+
+app.get("/admin/productos/:id/editar", requerirAutorizacion, (req, res) => {
+  const id = Number(req.params.id);
+
+  if (id == null || id <= 0) {
+    return res.status(400).send("ID de producto inválido");
+  }
+
+  res.render("admin/newProduct", {
+    titulo: "Productos | Modificar",
+    modo: "editar",
+    productoId: id,
+  });
+});
+
 // ENDPOINTS PRODUCTOS
 
-app.get("/api/productos", requerirClienteApi ,async (req, res) => {
+app.get("/api/productos", requerirClienteApi, async (req, res) => {
   try {
     const productos = await Productos.findAll({
       where: {
@@ -153,7 +174,7 @@ app.get("/api/productos", requerirClienteApi ,async (req, res) => {
   }
 });
 
-app.get("/api/productos/juegos", requerirClienteApi,async (req, res) => {
+app.get("/api/productos/juegos", requerirClienteApi, async (req, res) => {
   try {
     const productos = await Productos.findAll({
       where: {
@@ -171,8 +192,7 @@ app.get("/api/productos/juegos", requerirClienteApi,async (req, res) => {
   }
 });
 
-
-app.get("/api/productos/dados", requerirClienteApi ,async (req, res) => {
+app.get("/api/productos/dados", requerirClienteApi, async (req, res) => {
   try {
     const productos = await Productos.findAll({
       where: {
@@ -190,8 +210,6 @@ app.get("/api/productos/dados", requerirClienteApi ,async (req, res) => {
   }
 });
 
-
-
 //=======ENDPOINTS CLIENTE========
 //Alta cliente
 //le setea la cookie y reenderiza la pagina sin el login
@@ -207,7 +225,7 @@ app.post("/salir", (req, res) => {
   res.redirect("/");
 });
 
-app.get("/api/cliente", (req, res)=>{
+app.get("/api/cliente", (req, res) => {
   const cliente = res.locals.cliente;
   res.status(200).json({
     name: cliente?.name ?? null,
@@ -280,7 +298,7 @@ app.post("/carrito", requerirCliente, async (req, res) => {
   else carrito.push({ id, cantidad });
 
   guardarCarrito(res, carrito); //guarda el carrito
-  
+
   //si el mismo cliente quiere hacer otra compra
   if (res.locals.cliente.compra) {
     await emitirCookieCliente(res, { name: res.locals.cliente.name });
@@ -289,7 +307,7 @@ app.post("/carrito", requerirCliente, async (req, res) => {
   res.redirect(req.get("referer") || "/productos"); // vuelve a donde estaba
 });
 
-app.get("/api/carrito", requerirClienteApi, async(req, res)=>{
+app.get("/api/carrito", requerirClienteApi, async (req, res) => {
   try {
     const { items, total } = await detalleCarrito(req);
     res.status(200).json({ items, total });
@@ -308,12 +326,15 @@ app.patch("/api/carrito/:id", requerirClienteApi, (req, res) => {
     return res.status(400).json({ error: "Datos inválidos" });
   }
   if (cantidad < 1 || cantidad > 10) {
-    return res.status(400).json({ error: "La cantidad debe estar entre 1 y 10" });
+    return res
+      .status(400)
+      .json({ error: "La cantidad debe estar entre 1 y 10" });
   }
 
   const carrito = leerCarrito(req);
   const item = carrito.find((i) => i.id === id);
-  if (!item) return res.status(404).json({ error: "El producto no está en el carrito" });
+  if (!item)
+    return res.status(404).json({ error: "El producto no está en el carrito" });
 
   item.cantidad = cantidad;
   guardarCarrito(res, carrito);
@@ -339,9 +360,8 @@ app.delete("/carrito/vaciar", requerirClienteApi, (req, res) => {
   res.status(200).json({ ok: true });
 });
 
-
-app.post("/api/carrito/comprar", requerirClienteApi, async (req, res)=>{
-  try{
+app.post("/api/carrito/comprar", requerirClienteApi, async (req, res) => {
+  try {
     const { items, total } = await detalleCarrito(req);
 
     if (items.length === 0) {
@@ -354,7 +374,7 @@ app.post("/api/carrito/comprar", requerirClienteApi, async (req, res)=>{
           nombre_cliente: res.locals.cliente.name.slice(0, 100),
           total,
         },
-        { transaction: t },  
+        { transaction: t },
       );
 
       await DetalleVenta.bulkCreate(
@@ -368,7 +388,7 @@ app.post("/api/carrito/comprar", requerirClienteApi, async (req, res)=>{
       );
 
       return ventaNueva;
-    }); 
+    });
 
     res.clearCookie("carrito", { path: "/" });
 
@@ -378,24 +398,25 @@ app.post("/api/carrito/comprar", requerirClienteApi, async (req, res)=>{
     });
 
     res.status(201).json({ id: venta.id });
-
-  }catch(error){
+  } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error al registrar la compra" });
   }
-  
 });
 
 //RELACIONES VENTAS
-Ventas.hasMany(DetalleVenta, { foreignKey: "id_venta", as: "detalles"});
+Ventas.hasMany(DetalleVenta, { foreignKey: "id_venta", as: "detalles" });
 DetalleVenta.belongsTo(Ventas, { foreignKey: "id_venta" });
 
-DetalleVenta.belongsTo(Productos, { foreignKey: "id_producto", as: "producto" });
+DetalleVenta.belongsTo(Productos, {
+  foreignKey: "id_producto",
+  as: "producto",
+});
 Productos.hasMany(DetalleVenta, { foreignKey: "id_producto" });
 
 //====ENDPOINTS TICKET=====
 
-app.get("/api/venta/:id", requerirClienteApi, async (req, res)=>{
+app.get("/api/venta/:id", requerirClienteApi, async (req, res) => {
   const id = Number(req.params.id);
 
   if (!Number.isInteger(id)) {
@@ -403,16 +424,37 @@ app.get("/api/venta/:id", requerirClienteApi, async (req, res)=>{
   }
 
   try {
-
     // 404 si no existe o si es de otro cliente (no revela que existe)
     if (res.locals.cliente.compra !== id) {
       return res.status(404).json({ error: "Venta no encontrada" });
     }
 
-    const venta = await obtenerVenta(id);
+    const venta = await Ventas.findByPk(id, {
+      include: {
+        model: DetalleVenta,
+        as: "detalles",
+        include: { model: Productos, as: "producto" },
+      },
+    });
 
-    res.status(200).json(venta);
+    if (!venta) {
+      return res.status(404).json({ error: "Venta no encontrada" });
+    }
 
+    res.status(200).json({
+      id: venta.id,
+      nombre_cliente: venta.nombre_cliente,
+      fecha: venta.fecha,
+      total: Number(venta.total),
+      items: venta.detalles.map((d) => ({
+        producto: {
+          id: d.id_producto,
+          nombre: d.producto?.nombre ?? "Producto eliminado",
+        },
+        cantidad: d.cantidad,
+        subtotal: Number(d.subtotal),
+      })),
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error al obtener la venta" });
@@ -648,6 +690,219 @@ app.post(
   },
 );
 
+app.post("/api/admin/productos", requerirAutorizacion, async (req, res) => {
+  try {
+    const { nombre, descripcion, precio, tipo, imagen } = req.body;
+
+    if (
+      !nombre ||
+      !String(nombre).trim() ||
+      precio === undefined ||
+      precio === null ||
+      precio === ""
+    ) {
+      return res.status(400).json({
+        error: "El nombre y el precio son obligatorios",
+      });
+    }
+
+    if (
+      typeof nombre !== "string" ||
+      !nombre.trim() ||
+      nombre.trim().length > 100 ||
+      (descripcion != null &&
+        (typeof descripcion !== "string" || descripcion.length > 500))
+    ) {
+      return res.status(400).json({
+        error: "Nombre o descripción inválidos",
+      });
+    }
+
+    const precioNumero = Number(precio);
+
+    if (
+      precio === "" ||
+      precio == null ||
+      !Number.isFinite(precioNumero) ||
+      precioNumero < 0
+    ) {
+      return res.status(400).json({
+        error: "El precio debe ser un número válido mayor o igual a cero",
+      });
+    }
+
+    if (!["juego", "dado"].includes(tipo)) {
+      return res.status(400).json({
+        error: "Tipo de producto inválido",
+      });
+    }
+
+    const categoria = tipo === "juego" ? "Juegos de mesa" : "Dados";
+
+    const productoNuevo = await Productos.create({
+      nombre: String(nombre).trim(),
+      descripcion: descripcion || null,
+      precio: precioNumero,
+      imagen: imagen || null,
+      categoria,
+      tipo,
+      activo: true,
+    });
+
+    return res.status(201).json({
+      mensaje: "Producto creado correctamente",
+      producto: productoNuevo,
+    });
+  } catch (error) {
+    console.error("Error al crear producto:", error);
+
+    return res.status(500).json({
+      error: "Error al crear el producto",
+    });
+  }
+});
+
+app.get("/api/admin/productos/:id", requerirAutorizacion, async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (id == null || id <= 0) {
+      return res.status(400).json({ error: "ID inválido" });
+    }
+
+    const producto = await Productos.findByPk(id);
+
+    if (!producto) {
+      return res.status(404).json({
+        error: "Producto no encontrado",
+      });
+    }
+
+    return res.status(200).json(producto);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: "Error al obtener el producto",
+    });
+  }
+});
+
+app.put("/api/admin/productos/:id", requerirAutorizacion, async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const { nombre, descripcion, precio, tipo, imagen } = req.body;
+
+    if (id == null || id <= 0) {
+      return res.status(400).json({ error: "ID inválido" });
+    }
+
+    const producto = await Productos.findByPk(id);
+
+    if (!producto) {
+      return res.status(404).json({
+        error: "Producto no encontrado",
+      });
+    }
+
+    if (
+      typeof nombre !== "string" ||
+      !nombre.trim() ||
+      nombre.trim().length > 100 ||
+      (descripcion != null &&
+        (typeof descripcion !== "string" || descripcion.length > 500))
+    ) {
+      return res.status(400).json({
+        error: "Nombre o descripción inválidos",
+      });
+    }
+
+    const precioNumero = Number(precio);
+
+    if (
+      precio === "" ||
+      precio == null ||
+      !Number.isFinite(precioNumero) ||
+      precioNumero < 0
+    ) {
+      return res.status(400).json({
+        error: "Precio inválido",
+      });
+    }
+
+    if (!["juego", "dado"].includes(tipo)) {
+      return res.status(400).json({
+        error: "Tipo de producto inválido",
+      });
+    }
+
+    const categoria = tipo === "juego" ? "Juegos de mesa" : "Dados";
+
+    await producto.update({
+      nombre: nombre.trim(),
+      descripcion: descripcion || null,
+      precio: precioNumero,
+      tipo,
+      categoria,
+      imagen: imagen ?? producto.imagen,
+    });
+
+    return res.status(200).json({
+      mensaje: "Producto modificado correctamente",
+      producto,
+    });
+  } catch (error) {
+    console.error("Error al modificar producto:", error);
+
+    return res.status(500).json({
+      error: "Error al modificar producto",
+    });
+  }
+});
+
+app.delete(
+  "/api/admin/productos/:id",
+  requerirAutorizacion,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+
+      if (!Number.isInteger(id) || id <= 0) {
+        return res.status(400).json({
+          error: "ID de producto inválido",
+        });
+      }
+
+      const producto = await Productos.findByPk(id);
+
+      if (!producto) {
+        return res.status(404).json({
+          error: "Producto no encontrado",
+        });
+      }
+
+      if (!producto.activo) {
+        return res.status(409).json({
+          error: "El producto ya está desactivado",
+        });
+      }
+
+      await producto.update({
+        activo: false,
+      });
+
+      return res.status(200).json({
+        mensaje: "Producto desactivado correctamente",
+      });
+    } catch (error) {
+      console.error("Error al eliminar producto:", error);
+
+      return res.status(500).json({
+        error: "Error al eliminar el producto",
+      });
+    }
+  },
+);
+
 try {
   await connection.authenticate();
   connection.sync({});
@@ -655,7 +910,6 @@ try {
   console.error(error);
 }
 
-// Iniciar servidor
 app.listen(envs.port, () => {
   console.log(`El servidor está escuchando en el puerto ${process.env.PORT}`);
 });

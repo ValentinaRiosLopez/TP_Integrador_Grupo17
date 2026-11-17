@@ -1,46 +1,4 @@
-
 /* LOGIN ADMINISTRADOR */
-
-.admin-login-page {
-  min-height: 100vh;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  background: #f4f5f7;
-  font-family: Arial, sans-serif;
-}
-
-.admin-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 32px;
-  background: white;
-}
-
-.admin-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-  color: #222;
-  font-weight: bold;
-}
-
-.admin-brand img {
-  width: 42px;
-  height: 42px;
-  object-fit: contain;
-}
-
-.admin-login-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-}
 
 .login-card {
   width: 100%;
@@ -111,10 +69,6 @@
 }
 
 @media (max-width: 600px) {
-  .admin-header {
-    padding: 12px 16px;
-  }
-
   .login-card {
     padding: 24px;
   }

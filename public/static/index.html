@@ -46,7 +46,7 @@
           <form action="/" method="POST">
             <div class="form-cliente">
             <label>Ingresá tu nombre: </label>
-            <input placeholder="Tu nombre" type="text" id="txt-nombre" name="name" required>
+            <input placeholder="Tu nombre" type="text" id="txt-nombre" name="name" minlength="3" maxlength="25" pattern="[a-zA-Z\s]+" required>
             <button type="submit" id="btn-ingreso">Aceptar</button></div>
           </form>
           <a href="/admin/login" id="ingreso-admin">Soy Administrador</a>

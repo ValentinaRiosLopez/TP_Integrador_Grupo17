@@ -41,42 +41,46 @@
     </header>
     <main id="contenido">
       <div id="ticket">
-        <div id="datos">
-          <p class="titulo">LUDONAUTICA</p>
-          
-          <p>Compra Nº<span id="id-compra"></span></p>
-          
-          <p>Cliente: <span id="nombre-cliente"></span></p>
-          
-          <p>Fecha: <span id="fecha-compra"></span></p>
-          <br>
-        </div>
-        <div id="detalle">
-          <p class="titulo">Detalle</p>
-          <table id="tbl-detalle">
-            <thead>
-              <tr class="fila">
-                <td>Cant.</td>
-                <td class="col-descripcion">Descripcion</td>
-                <td class="col-importe">Importe</td>
-              </tr>
-            </thead>
-            <tbody id="detalle-productos"></tbody>
-            <tfoot id="total-carrito">
-              <tr class="fila">
-                <td>Total:</td>
-                <td id="total-compra" colspan="3">0.00</td>
-              </tr>
-            </tfoot>            
-          </table>
-        </div>
-        <p>¡Gracias por comprar en ludonautica! :)</p>
-        
+          <div id="datos">
+            <p class="titulo">LUDONAUTICA</p>
+            
+            <p>Compra Nº<span id="id-compra"></span></p>
+            
+            <p>Cliente: <span id="nombre-cliente"></span></p>
+            
+            <p>Fecha: <span id="fecha-compra"></span></p>
+            <br>
+          </div>
+          <div id="detalle">
+            <p class="titulo">Detalle</p>
+            <table id="tbl-detalle">
+              <thead>
+                <tr class="fila">
+                  <td>Cant.</td>
+                  <td class="col-descripcion">Descripcion</td>
+                  <td class="col-importe">Importe</td>
+                </tr>
+              </thead>
+              <tbody id="detalle-productos"></tbody>
+              <tfoot id="total-carrito">
+                <tr class="fila">
+                  <td>Total:</td>
+                  <td id="total-compra" colspan="2">0.00</td>
+                </tr>
+              </tfoot>            
+            </table>
+          </div>
+          <p>¡Gracias por comprar en ludonautica! :)</p> 
       </div>
 
       <div id="div-descargar">
-        <button id="btn-descargar">Descargar como PDF</button> 
+        <button id="btn-descargar"><a id="link-descarga" href="#">Descargar como PDF</a></button> 
       </div>
+
+      <form action="/salir" method="POST">
+        <button type="submit" id="btn-salir">Salir</button>
+      </form>
+      
     </main>
     <footer>
       <section id="info-contacto">

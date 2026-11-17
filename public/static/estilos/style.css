@@ -29,6 +29,7 @@
   font-family: "Texto";
 }
 
+
 body {
   max-width: 2000px;
   min-height: 100vh;
@@ -119,6 +120,10 @@ header {
   display: flex;
 }
 
+#li-ticket{
+  display: none;
+}
+
 /* ESTILOS MAIN INICIO*/
 
 #contenido{
@@ -156,6 +161,10 @@ header {
 
 
 /* ESTILOS PARFIL USUARIO */
+
+#contenido-cliente{
+  place-items: center;
+}
 
 #panel-cliente {
   text-align: center;

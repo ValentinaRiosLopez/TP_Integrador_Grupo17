@@ -99,13 +99,6 @@ export function requerirClienteApi(req, res, next) {
   next();
 }
 
-export function requerirClienteApi(req, res, next) {
-  if (!res.locals.cliente) {
-    return res.status(401).json({ error: "Cliente no identificado" });
-  }
-  next();
-}
-
 export function requerirAutorizacion(req, res, next) {
   const token = req.cookies?.autorizacion;
 
@@ -188,5 +181,12 @@ export function guardarCarrito(res, carrito) {
 
 export function requerirCompra(req, res, next) {
   if (!res.locals.cliente?.compra) return res.redirect("/carrito");
+  next();
+}
+
+export function requerirCompraApi(req, res, next) {
+  if (!res.locals.cliente?.compra) {
+    return res.status(404).json({ error: "No se encontró la compra" });
+  }
   next();
 }

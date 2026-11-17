@@ -83,7 +83,7 @@ async function llenarCarrito(){
         const fila = document.createElement("tr");
         const celda = document.createElement("td")
         celda.appendChild(crearTexto("El carrito esta vacio."))
-        celda.colSpan = 3;
+        celda.colSpan = 4;
         fila.appendChild(celda);
         tabla.appendChild(fila);
     }else{
@@ -158,7 +158,9 @@ async function realizarCompra(){
 
     //si no esta identificado el cliente
     if (response.status === 401) {
+      
       location.href = "/";
+
       return;
     }
 
@@ -167,13 +169,16 @@ async function realizarCompra(){
       return;
     }
 
+    const data = await response.json().catch(() => ({}));
+
     if (!response.ok) {
       alert("Error en la compra.");
       $("btn-comprar").disabled = false;
       $("btn-vaciar").disabled = false;
+      return;
     }
 
-    location.href = `/ticket`;
+    location.href = `/ticket?venta=${data.id}`;
   } catch {
     alert("Error en la compra.");
     $("btn-comprar").disabled = false;

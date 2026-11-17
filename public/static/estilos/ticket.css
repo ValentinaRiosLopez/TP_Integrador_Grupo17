@@ -1,0 +1,100 @@
+#ticket {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr); 
+  align-content: space-evenly;
+  row-gap: 20px;
+  background-color: white;
+  box-sizing: border-box;
+  max-width: min(440px, calc(100vw - 32px)); 
+  margin: 20px auto;                        
+  padding: 10px;
+  border: 1px black solid;
+}
+
+
+#ticket p {
+  color: black;
+  font-family: monospace;
+  margin: 5px;
+}
+
+.titulo {
+  font-weight: bold;
+}
+
+#tbl-detalle {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+}
+
+#tbl-detalle td {
+  color: black;
+  font-family: monospace;
+  padding: 5px;
+  overflow-wrap: anywhere; /* los nombres largos se parten en vez de ensanchar la tabla */
+}
+
+/* cantidad: columna angosta; importe: nunca se parte */
+#tbl-detalle td:first-child {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.col-importe {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.fila {
+  border-bottom: 1px solid black;
+  border-top: 1px solid black;
+}
+
+#total-compra {
+  text-align: right;
+}
+
+#datos span {
+  color: black;
+  font-family: monospace;
+}
+
+#div-descargar {
+  display: flex;
+  justify-content: center;
+  margin: 20px 16px;
+}
+
+
+#btn-descargar {
+  box-sizing: border-box;
+  width: min(100%, 280px);
+  padding: 15px;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid rgb(198, 199, 166);
+  border-radius: 10px;
+  background-color: rgb(56, 73, 41);
+  color: rgb(198, 199, 166);
+}
+
+
+#btn-descargar:hover {
+  background-color: rgb(31, 45, 19);
+  text-decoration: underline;
+}
+
+#fondo-ticket {
+  background-color: rgb(27, 26, 26);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 480px) {
+  #ticket p,
+  #tbl-detalle td {
+    font-size: 0.85rem;
+  }
+}

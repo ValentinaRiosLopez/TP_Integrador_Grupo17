@@ -182,3 +182,10 @@ export function requerirCompra(req, res, next) {
   if (!res.locals.cliente?.compra) return res.redirect("/carrito");
   next();
 }
+
+export function requerirCompraApi(req, res, next) {
+  if (!res.locals.cliente?.compra) {
+    return res.status(404).json({ error: "No se encontró la compra" });
+  }
+  next();
+}

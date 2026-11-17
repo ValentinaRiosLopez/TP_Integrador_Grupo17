@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TP INTEGRADOR</title>
+    <link
+      rel="shortcut icon"
+      href="/public/static/imagenes/logo.png"
+      type="image/x-icon"
+    />
+    <link rel="stylesheet" href="/public/static/estilos/ticket.css" />
+    <link rel="stylesheet" href="/public/static/estilos/style.css" />
+</head>
+<body id="fondo-ticket">
+    <main id="contenido" style="margin: 0 auto;">
+      <div id="ticket">
+        <div id="datos">
+          <p class="titulo">LUDONAUTICA</p>
+          
+          <p>Compra Nº<%=ticket.id%></p>
+          
+          <p>Cliente: <%=ticket.nombre_cliente%></p>
+          
+          <p>Fecha: <%=ticket.fecha%></p>
+          <br>
+        </div>
+        <div id="detalle">
+          <p class="titulo">Detalle</p>
+          <table id="tbl-detalle">
+            <thead>
+              <tr class="fila">
+                <td>Cant.</td>
+                <td class="col-descripcion">Descripcion</td>
+                <td class="col-importe">Importe</td>
+              </tr>
+            </thead>
+            <tbody id="detalle-productos">
+            <% if(ticket.items.length >= 0){ %>
+              <% ticket.items.forEach(function(item) { %>
+                <tr>
+                  <td><%= item.cantidad %></td>
+                  <td class="col-descripcion"><%= item.producto.nombre %></td>
+                  <td class="col-importe">$<%= item.subtotal.toFixed(2) %></td>
+                </tr>
+              <% }); %>
+            <% } %>  
+
+            </tbody>
+            <tfoot id="total-carrito">
+              <tr class="fila">
+                <td>Total:</td>
+                <td id="total-compra" colspan="2">$<%= ticket.total.toFixed(2)%></td>
+              </tr>
+            </tfoot>            
+          </table>
+        </div>
+        <div>
+         <p>¡Gracias por comprar en ludonautica! :)</p> 
+        </div>
+        
+      </div>
+    </main>  
+</body>
+</html>

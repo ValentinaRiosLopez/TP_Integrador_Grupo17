@@ -1,8 +1,8 @@
+
 function $(id){return document.getElementById(id)};
 function crearTexto(texto){return document.createTextNode(texto)};
 
-async function traerDatosVenta(){
-    const idVenta = new URLSearchParams(location.search).get("venta");
+async function traerDatosVenta(idVenta){
     let urlConsulta = "/api/venta/" + idVenta;
 
     try {
@@ -25,34 +25,19 @@ async function traerDatosVenta(){
 
 }
 
-function formatearFecha(iso) {
-  const fecha = new Date(iso);
-
-  const dia = fecha.toLocaleDateString("es-AR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    timeZone: "America/Argentina/Buenos_Aires",
-  });
-
-  const hora = fecha.toLocaleTimeString("es-AR", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-    timeZone: "America/Argentina/Buenos_Aires",
-  });
-
-  return `${dia} - ${hora} hs`;
-}
 
 async function llenarTicket(){
-    const venta = await traerDatosVenta();
+    const id = new URLSearchParams(location.search).get("venta");
+    $("link-descarga").href = `/api/ticket/descargar/${id}`;
+    const venta = await traerDatosVenta(id);
 
-    $("id-compra").innerHTML = venta.id;
-    $("nombre-cliente").innerHTML = venta.nombre_cliente;
-    const fecha = formatearFecha(venta.fecha);
+    if(!venta) return;
 
-    $("fecha-compra").innerHTML = fecha;
+    $("id-compra").textContent = venta.id;
+    $("nombre-cliente").textContent = venta.nombre_cliente;
+    const fecha = venta.fecha;
+
+    $("fecha-compra").textContent = fecha;
 
     const tabla = $("detalle-productos");
 
@@ -82,9 +67,9 @@ async function llenarTicket(){
 
         $("total-compra").textContent = "$" + venta.total.toFixed(2);
     }
+
+    
 }
 
 
 llenarTicket();
-
-//$("btn-descargar").addEventListener("click", descargarPdf());

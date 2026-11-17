@@ -27,14 +27,14 @@ export async function setearCookieDeAutorizacion(req, res, next = () => {}) {
 
   const token = await generarJWT({
     id: usuario.id,
-  });
+  }, EXP_COOKIE_AUTORIZACION/1000);
 
   res.cookie("autorizacion", token, {
     path: "/",
     httpOnly: true,
     secure: false,
     sameSite: "Lax",
-    maxAge: 1000 * 60 * 10,
+    maxAge: EXP_COOKIE_AUTORIZACION,
   });
 
   next();

@@ -3,13 +3,17 @@ import jwt from "jsonwebtoken";
 import { envs } from "./config/env.js";
 
 const secret = envs.apiSecret;
+const EXP_COOKIE_CLIENTE = 1000 * 60 * 10;
+
+const EXP_COOKIE_AUTORIZACION = 1000 * 60 * 30;
+
+const EXP_COOKIE_CARRITO = 1000 * 60 * 10;
+const EXP_COOKIE_MODO = 1000 * 60 * 60;
+
 
 // Función para generar el token
-async function generarJWT(payload) {
-  const token = jwt.sign(payload, secret, {
-    expiresIn: "30m",
-  });
-
+async function generarJWT(payload,  expiresIn = "10m") {
+  const token = jwt.sign(payload, secret, { expiresIn});
   return token;
 }
 
@@ -31,20 +35,22 @@ export async function setearCookieDeAutorizacion(req, res, next = () => {}) {
     httpOnly: true,
     secure: false,
     sameSite: "Lax",
-    maxAge: 1000 * 60 * 30,
+    maxAge: 1000 * 60 * 10,
   });
 
   next();
 }
 
 export async function emitirCookieCliente(res, { name, compra = null }) {
-  const token = await generarJWT({ name, compra });
+
+  const token = await generarJWT({ name, compra }, EXP_COOKIE_CLIENTE/1000 );
+
   res.cookie("cliente", token, {
     path: "/",
     httpOnly: true,
     secure: false,
     sameSite: "Lax",
-    maxAge: 1000 * 60 * 10,
+    maxAge: EXP_COOKIE_CLIENTE,
   });
 }
 
@@ -85,10 +91,9 @@ export function leerCookieCliente(req, res, next) {
 //si pasa el tiempo de expiracion devuelve al cliente al login
 // Revisar si no deberíamos buscar en la req la cookie cliente
 export function requerirCliente(req, res, next) {
-  if (!res.locals.cliente){
-    
+  if (!res.locals.cliente){ 
     return res.redirect("/");
-  } 
+  }
   next();
 }
 
@@ -98,6 +103,7 @@ export function requerirClienteApi(req, res, next) {
   }
   next();
 }
+
 
 export function requerirAutorizacion(req, res, next) {
   const token = req.cookies?.autorizacion;
@@ -171,13 +177,11 @@ export function guardarCarrito(res, carrito) {
     path: "/",
     httpOnly: true,
     sameSite: "Lax",
-    maxAge: 24 * 60 * 60 * 1000,
+    maxAge: EXP_COOKIE_CARRITO,
   });
 }
 
 //midelware si ya hizo una compra
-
-
 
 export function requerirCompra(req, res, next) {
   if (!res.locals.cliente?.compra) return res.redirect("/carrito");
@@ -189,4 +193,25 @@ export function requerirCompraApi(req, res, next) {
     return res.status(404).json({ error: "No se encontró la compra" });
   }
   next();
+}
+
+
+//middleware modo claro/oscuro
+
+export function leerModo(req){
+  try {
+    const modo = req.cookies?.modo ?? "claro";
+    return modo
+  } catch {
+    return "claro";
+  }
+}
+
+export function guardarModo(res, modo) {
+  res.cookie("modo", modo, {
+    path: "/",
+    httpOnly: true,
+    sameSite: "Lax",
+    maxAge: EXP_COOKIE_MODO,
+  });
 }

@@ -21,6 +21,11 @@
         <h1>Ludonautica</h1>
         <h5>Rios Lopez Valentina - Rodriguez Ventura Facundo</h5>
       </div>
+      <div id="selector-modo">
+        <button type="button" id="btn-modo">
+          <img src="../public/static/iconos/darkmode.png" id="img-modo">
+        </button>
+      </div>
       <div id="contenedor-menu">
         <nav>
           <ul id="menu-principal">
@@ -43,6 +48,16 @@
       <h1 id="titulo-productos">Nuestros Productos</h1>
 
       <div id="lista-productos"></div>
+
+      <div id="lista-productos"></div>
+
+      <nav id="paginacion" aria-label="Paginación de productos" hidden>
+        <button type="button" id="pag-anterior">Anterior</button>
+        <span id="pag-info" aria-live="polite">
+          Página <span id="pag-actual">1</span> de <span id="pag-total">1</span>
+        </span>
+        <button type="button" id="pag-siguiente">Siguiente</button>
+      </nav>
     </main>
     <footer>
       <section id="info-contacto">
@@ -55,6 +70,7 @@
         </div>
       </section>
     </footer>
+    <script src="/public/static/js/modo.js"></script>
     <script src="/public/static/js/estadoCompra.js"></script>
     <script src="/public/static/js/getProductos.js"></script>
   </body>

@@ -24,7 +24,9 @@ import {
   requerirClienteApi,
   emitirCookieCliente,
   requerirCompra,
-  requerirCompraApi
+  requerirCompraApi,
+  guardarModo,
+  leerModo
 } from "./middlewares.js";
 import puppeteer from "puppeteer";
 import ejs from "ejs";
@@ -85,6 +87,8 @@ app.use("/js", express.static(path.join(__dirname, "js")));
 // RUTAS
 
 app.get("/", (req, res) => {
+  const modo = leerModo(req);
+  guardarModo(res, modo);
   res.sendFile(path.join(carpetaRaiz, "public/static/", "index.html"));
 });
 
@@ -231,6 +235,7 @@ app.get("/api/cliente", (req, res) => {
     compra: cliente?.compra ?? null,
   });
 });
+
 
 //==== ENDPOINS IMAGENES ====
 
@@ -586,6 +591,36 @@ app.get("/api/ticket/descargar/:id",  requerirClienteApi, requerirCompraApi, asy
     res.status(500).json({ error: "No se pudo generar el PDF" });
   }  
 });
+
+//=====ENDPOINTS MODO======
+
+app.post("/api/modo", (req, res) => {
+  const modos = ["claro","oscuro"];
+
+  const modo = req.body.modo; 
+
+  if (!modos.includes(modo)) return res.status(400).send("Modo invalido");
+
+  const modoGuardado = leerModo(req);
+
+  if(modoGuardado !== modo){
+    guardarModo(res, modo);
+  }
+  
+  res.status(200).redirect(req.get("referer") || "/"); // vuelve a donde estaba
+});
+
+app.get("/api/modo", (req, res)=>{
+  try {
+    const modo = leerModo(req);
+    res.status(200).json(modo);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al obtener el modo" });
+  }
+});
+
+
 // ENDPOINTS Admin //
 // Alta de usuarios
 app.post(

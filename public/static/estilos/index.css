@@ -90,11 +90,10 @@
   margin-bottom: 50px;
 }
 
-.tarjeta-productos{
+#tarjeta-productos{
   margin: 5px;
   padding: 15px;
   height: 100%;
-  background-color: rgb(31,45,19);
   max-width: 90%;
   text-align: center;
   border: 1px solid rgb(198,199,166);
@@ -104,8 +103,7 @@
   justify-content: space-between;
 }
 
-.tarjeta-productos:hover{
-  background-color: rgb(15,24,10);
+#tarjeta-productos:hover{
   text-decoration: underline;  
 }
 

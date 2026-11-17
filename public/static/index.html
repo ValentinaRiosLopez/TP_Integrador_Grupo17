@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="../public/static/estilos/index.css" />
   </head>
   <body>
+    
     <header>
       <div id="imagen-logo">
         <img src="../public/static/imagenes/logo.png" alt="Imagen Logo" />
@@ -20,6 +21,11 @@
       <div id="nombre-negocio">
         <h1>Ludonautica</h1>
         <h5>Rios Lopez Valentina - Rodriguez Ventura Facundo</h5>
+      </div>
+      <div id="selector-modo">
+        <button type="button" id="btn-modo">
+          <img src="../public/static/iconos/darkmode.png" id="img-modo">
+        </button>
       </div>
       <div id="contenedor-menu">
         <nav>
@@ -50,12 +56,12 @@
             <button type="submit" id="btn-ingreso">Aceptar</button></div>
           </form>
           <a href="/admin/login" id="ingreso-admin">Soy Administrador</a>
-        </div>
-        
+        </div> 
       </div>
       <div id="contenido-cliente">
         <div id="panel-cliente">
                 <h3>Hola <span id="nombre-cliente"></span>!!!</h3>
+
                 <form action="/salir" method="POST">
                   <button type="submit" id="btn-salir">Salir</button>
                 </form>
@@ -72,7 +78,7 @@
                 <div id="productos-destacados">
                   <h2>Nuestros Productos</h2>
                   <div id="productos">
-                    <div class="tarjeta-productos">
+                    <div id="tarjeta-productos" class="producto">
                       <div id="imagen-producto">
                         <a href="/productos/juegos">
                           <img src="../public/static/imagenes/juegos-de-mesa.png" alt="juegos de mesa">
@@ -81,7 +87,7 @@
                       <h2><a href="/productos/juegos">Juegos de Mesa</a></h2>
                     </div>
 
-                    <div class="tarjeta-productos">
+                    <div id="tarjeta-productos" class="producto">
                       <div id="imagen-producto">
                         <a href="/productos/dados">
                           <img src="../public/static/imagenes/dados.png" alt="dados">
@@ -106,6 +112,7 @@
         </div>
       </section>
     </footer>
+    <script src="/public/static/js/modo.js"></script>
     <script src="/public/static/js/index.js"></script>
     <script src="/public/static/js/estadoCompra.js"></script>
   </body>

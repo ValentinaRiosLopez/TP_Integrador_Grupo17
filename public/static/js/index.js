@@ -2,7 +2,7 @@ function $(id){return document.getElementById(id)};
 
 async function consultarEstadoCliente(){
     try {
-        const response = await fetch("/api/cliente");
+        const response = await fetch("/api/cliente", {method: 'GET'});
 
         if (response.status === 401) {
         location.href = "/";

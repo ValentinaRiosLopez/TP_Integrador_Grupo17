@@ -51,6 +51,12 @@
   margin: 10px;
 }
 
+.form-agregar{
+  display: grid;
+  grid-template-columns: 1fr;
+  place-items: center;
+}
+
 .form-agregar input {
   color: black;
   text-align: center;
@@ -62,7 +68,7 @@
   background-color: rgb(198, 199, 166);
   border-radius: 5px;
   border: 2px solid rgb(31, 45, 19);
-  width: 90%;
+  width: 70%;
 }
 
 .form-agregar button:hover {

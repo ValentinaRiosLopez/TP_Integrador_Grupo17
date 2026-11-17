@@ -19,8 +19,8 @@ import {
   requerirCliente,
   requerirAutorizacion,
   verificarCamposRequeridos,
-  validarSesionActiva,
-  leerCarrito,
+  validarSesionActiva, 
+  leerCarrito, 
   guardarCarrito,
   requerirClienteApi,
   emitirCookieCliente,
@@ -256,7 +256,7 @@ async function detalleCarrito(req) {
   const carrito = leerCarrito(req);
   if (carrito.length === 0) return { items: [], total: 0 };
 
-  const productos = await Productos.findAll({
+    const productos = await Productos.findAll({
     where: { id: carrito.map((i) => i.id), activo: true },
   });
 

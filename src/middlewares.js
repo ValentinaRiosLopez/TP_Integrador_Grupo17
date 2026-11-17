@@ -99,6 +99,13 @@ export function requerirClienteApi(req, res, next) {
   next();
 }
 
+export function requerirClienteApi(req, res, next) {
+  if (!res.locals.cliente) {
+    return res.status(401).json({ error: "Cliente no identificado" });
+  }
+  next();
+}
+
 export function requerirAutorizacion(req, res, next) {
   const token = req.cookies?.autorizacion;
 

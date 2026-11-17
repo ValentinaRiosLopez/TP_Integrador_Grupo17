@@ -40,19 +40,30 @@
       </div>
     </header>
     <main id="contenido">
+      <h2>Carrito</h2>
       <div id="carrito">
-        <h2>Carrito</h2>
-        <div id="items-carrito">
           <table id="tabla-carrito">
+            <thead>
+              <tr id="fila-titulos">
+                <td>Cant.</td>
+                <td class="col-descripcion">Descripcion</td>
+                <td>Importe</td>
+              </tr>
+            </thead>
             <tbody id="productos-carrito"></tbody>
             <tfoot id="total-carrito">
               <tr id="fila-total">
                 <td>Total:</td>
+                <td id="total-compra" colspan="3"></td>
               </tr>
             </tfoot>
           </table>
-        </div>
+          <button id="btn-vaciar">Vaciar Carrito</button>  
       </div>
+      <div id="div-comprar">
+        <button id="btn-comprar">Finalizar Compra</button> 
+      </div>
+       
     </main>
     <footer>
       <section id="info-contacto">
@@ -65,5 +76,6 @@
         </div>
       </section>
     </footer>
+    <script src="/public/static/js/carrito.js"></script>
   </body>
 </html>

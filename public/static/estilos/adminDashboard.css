@@ -81,17 +81,68 @@ body {
 }
 
 .btn-editar-producto,
-.btn-eliminar-producto {
+.btn-eliminar-producto,
+.btn-disponibilizar-producto {
   align-items: center;
   background-color: transparent;
   border: 1px solid #ccc;
+  display: flex;
+  gap: 4px;
   padding: 6px 12px;
   border-radius: 20px;
+  transition: background-color 0.2s;
 }
 
 .btn-editar-producto:hover {
   border: 1px solid #030303;
+  background-color: rgba(0, 0, 0, 0.4);
+  cursor: pointer;
 }
 .btn-eliminar-producto:hover {
   border: 1px solid red;
+  background-color: rgba(247, 0, 0, 0.4);
+  cursor: pointer;
 }
+.btn-disponibilizar-producto:hover {
+  border: 1px solid green;
+  background-color: rgb(0, 119, 10, 0.4);
+  cursor: pointer;
+}
+
+.btn-acciones {
+  display: flex;
+  flex-direction: row;
+  grid-gap: 8px;
+}
+
+#modal-confirmacion {
+  border: none;
+  border-radius: 12px;
+  padding: 28px;
+  max-width: 400px;
+  width: calc(100% - 40px);
+  box-sizing: border-box;
+}
+
+#modal-confirmacion::backdrop {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.acciones-modal {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.acciones-modal button {
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#btn-confirmar {
+  background-color: rgb(31, 45, 19);
+  color: white;
+}
+

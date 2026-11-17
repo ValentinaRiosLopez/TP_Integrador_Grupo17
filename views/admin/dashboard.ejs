@@ -78,23 +78,55 @@
                   <% } %>
                 </td>
                 <td>
+                  <div class="btn-acciones">
                   <button
+                    type="button"
                     class="btn-editar-producto"
                     data-id="<%= producto.id %>"
                   >
                             <img class="icono-boton" src="/public/static/iconos/modify.png" alt="logo modificar" />Editar
                   </button>
-
+                  <% if (producto.activo) { %>
                   <button
+                    type="button"
                     class="btn-eliminar-producto"
                     data-id="<%= producto.id %>"
+                    data-nombre="<%= producto.nombre %>"
                   >
                     <img class="icono-boton" src="/public/static/iconos/delete.png" alt="logo eliminar" />Eliminar
                   </button>
+                   <% } else { %>
+                        <button
+                          type="button"
+                          class="btn-disponibilizar-producto"
+                          data-id="<%= producto.id %>"
+                          data-nombre="<%= producto.nombre %>"
+                      >
+                         <img class="icono-boton" src="/public/static/iconos/reactivate.png" alt="logo disponibilizar" /> Disponibilizar 
+                      </button>
+
+                    <% } %>
+                    </td>
               </tr>
             <% }); %>
           </tbody>
         </table>
+
+        <dialog id="modal-confirmacion">
+        <h3 id="titulo-modal"></h3>
+        <p id="mensaje-modal"></p>
+        
+          <div class="acciones-modal">
+            <button type="button" id="btn-cancelar">
+              Cancelar
+            </button>
+          
+            <button type="button" id="btn-confirmar">
+              Confirmar
+            </button>
+          </div>
+        </dialog>
+
       </section>
     </main>
   </body>

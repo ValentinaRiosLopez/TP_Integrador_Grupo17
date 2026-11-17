@@ -1,3 +1,4 @@
+
 import jwt from "jsonwebtoken";
 import { envs } from "./config/env.js";
 
@@ -148,7 +149,7 @@ export function validarSesionActiva(req, res, next) {
   try {
     jwt.verify(token, secret);
 
-    return res.status(200).json({
+    res.status(200).json({
       mensaje: "Ya tenés una sesión activa",
     });
   } catch (error) {

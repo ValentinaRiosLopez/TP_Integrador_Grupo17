@@ -8,11 +8,12 @@
 
     <!-- Esto lo podemos hacer porque en express configuramos:
   app.use("/public", express.static(path.join(carpetaRaiz, "public")));-->
-    <link rel="stylesheet" href="/public/static/estilos/adminLogin.css" />
+  <link rel="stylesheet" href="/public/static/estilos/adminLogin.css" />
+  <link rel="stylesheet" href="/public/static/estilos/adminCommons.css" />
     <script src="/js/admin-login.js" defer></script>
   </head>
 
-  <body class="admin-login-page">
+  <body class="admin-page">
     <header class="admin-header">
       <a href="/" class="admin-brand">
         <img src="/public/static/imagenes/logo.png" alt="Logo" />
@@ -24,7 +25,7 @@
       </nav>
     </header>
 
-    <main class="admin-login-main">
+    <main class="admin-main">
       <section class="login-card">
         <h1>Iniciar sesión</h1>
         <p>Ingresá tus credenciales de administrador</p>

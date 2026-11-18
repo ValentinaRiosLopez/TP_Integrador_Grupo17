@@ -93,12 +93,12 @@
   margin-bottom: 50px;
 }
 
-.tarjeta-productos {
+#tarjeta-productos{
   margin: 5px;
   padding: 15px;
   height: 100%;
-  background-color: rgb(31, 45, 19);
   max-width: 90%;
+  background-color: rgb(31, 45, 19);
   text-align: center;
   border: 1px solid rgb(198, 199, 166);
   border-radius: 12px;
@@ -107,9 +107,9 @@
   justify-content: space-between;
 }
 
-.tarjeta-productos:hover {
+#tarjeta-productos:hover{
+  text-decoration: underline;  
   background-color: rgb(15, 24, 10);
-  text-decoration: underline;
 }
 
 #imagen-producto img {

@@ -25,6 +25,8 @@ import {
   emitirCookieCliente,
   requerirCompra,
   requerirCompraApi,
+  guardarModo,
+  leerModo,
 } from "./middlewares.js";
 import puppeteer from "puppeteer";
 import ejs from "ejs";
@@ -85,6 +87,8 @@ app.use("/js", express.static(path.join(__dirname, "js")));
 // RUTAS
 
 app.get("/", (req, res) => {
+  const modo = leerModo(req);
+  guardarModo(res, modo);
   res.sendFile(path.join(carpetaRaiz, "public/static/", "index.html"));
 });
 
@@ -241,19 +245,24 @@ app.get("/api/cliente", (req, res) => {
 //==== ENDPOINS IMAGENES ====
 
 //guarda imagen en la base de datos
-app.post("/subirImagen", requerirAutorizacion, upload.single("imagen"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: "No se subio ninguna imagen" });
-  }
+app.post(
+  "/subirImagen",
+  requerirAutorizacion,
+  upload.single("imagen"),
+  (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ error: "No se subio ninguna imagen" });
+    }
 
-  //aca armo el string del url de la imagen
-  const nombreFile = req.file.filename;
-  const rutaImg = `/public/static/imagenes/${nombreFile}`;
+    //aca armo el string del url de la imagen
+    const nombreFile = req.file.filename;
+    const rutaImg = `/public/static/imagenes/${nombreFile}`;
 
-  //aca añadimos el url al producto
+    //aca añadimos el url al producto
 
-  res.status(201).json({ imagen: rutaImg });
-});
+    res.status(201).json({ imagen: rutaImg });
+  },
+);
 
 //funcion leer carrito
 
@@ -598,6 +607,35 @@ app.get(
     }
   },
 );
+
+//=====ENDPOINTS MODO======
+
+app.post("/api/modo", (req, res) => {
+  const modos = ["claro", "oscuro"];
+
+  const modo = req.body.modo;
+
+  if (!modos.includes(modo)) return res.status(400).send("Modo invalido");
+
+  const modoGuardado = leerModo(req);
+
+  if (modoGuardado !== modo) {
+    guardarModo(res, modo);
+  }
+
+  res.status(200).redirect(req.get("referer") || "/"); // vuelve a donde estaba
+});
+
+app.get("/api/modo", (req, res) => {
+  try {
+    const modo = leerModo(req);
+    res.status(200).json(modo);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al obtener el modo" });
+  }
+});
+
 // ENDPOINTS Admin //
 // Alta de usuarios
 app.post(
@@ -914,7 +952,6 @@ app.delete(
   },
 );
 
-
 app.put(
   "/api/admin/productos/:id/activar",
   requerirAutorizacion,
@@ -949,7 +986,6 @@ app.put(
       return res.status(200).json({
         mensaje: "Producto disponibilizado correctamente",
       });
-
     } catch (error) {
       console.error("Error al activar producto:", error);
 
@@ -957,9 +993,8 @@ app.put(
         error: "Error al activar el producto",
       });
     }
-  }
+  },
 );
-
 
 try {
   await connection.authenticate();

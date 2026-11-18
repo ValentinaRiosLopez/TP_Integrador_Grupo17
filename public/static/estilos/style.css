@@ -42,12 +42,13 @@ body {
 
 header {
   display: grid;
-  background-color: rgb(31, 45, 19); /*VERDE 2*/
-  grid-template-columns: 1fr 2fr;
+  background-color: rgb(31, 45, 19); 
+  grid-template-columns: 2fr 5fr 1fr;
   grid-template-rows: 2fr 1fr;
   text-align: center;
   align-items: center;
 }
+
 #nombre-negocio {
   text-align: left;
 }
@@ -61,17 +62,36 @@ header {
 }
 
 #imagen-logo {
-  max-width: 100%;
+  max-width: 180px;
+  
 }
 
 #imagen-logo img {
-  max-width: 40%;
+  width: 100%;
+  margin: auto;
+}
+
+#btn-modo{
+  border: none; 
+  background: transparent; 
+  padding: 0; 
+  cursor: pointer;
+  width: 30%; 
+  max-width: 60px; 
+  min-width: 35px;
+}
+
+#img-modo{
+  background-color: rgb(198, 199, 166);
+  width: 100%;
+  display: block; 
+  border-radius: 30px;
 }
 
 /* ESTILOS MENU */
 
 #contenedor-menu {
-  grid-column: 1 / 3;
+  grid-column: 1 / 4;
   width: 100%;
   align-self: end;
 }
@@ -114,6 +134,7 @@ header {
 #menu-secundario li {
   width: 100%;
   background-color: rgb(31, 45, 19);
+  cursor: pointer;
 }
 
 #menu-principal li:hover #menu-secundario {
@@ -170,6 +191,7 @@ header {
   border: 2px solid rgb(31, 45, 19);
   padding: 2px;
   margin: 5px;
+  cursor: pointer;
 }
 
 #panel-cliente span {
@@ -209,3 +231,54 @@ footer {
 #informacion p {
   margin: 5px;
 }
+
+/*tarjeta*/
+
+.producto{
+  background-color: rgb(31, 45, 19);
+}
+
+.producto:hover{
+  background-color: rgb(15, 24, 10);
+}
+
+
+@media(max-width: 550px){
+ /* #btn-modo{ 
+    max-width: 20px; 
+  }  */ 
+}
+
+/* MODO OSCURO*/
+
+.darkMode{
+  background-color: rgb(31,45,19);
+}
+
+.darkMode header{
+  background-color: rgb(15,24,10);
+}
+
+.darkMode #menu-principal li:hover {
+  background-color: rgb(5, 8, 4); 
+}
+
+.darkMode #menu-secundario li {
+  width: 100%;
+  background-color: rgb(15,24,10);
+}
+
+.darkMode footer{
+  background-color: rgb(15,24,10);
+  align-self: end;
+  align-items: center;
+}
+
+.darkMode .producto{
+  background-color: rgb(15, 24, 10);
+}
+
+.darkMode .producto:hover{
+  background-color: rgb(5, 8, 4);
+}
+

@@ -6,16 +6,16 @@
     <title>TP INTEGRADOR</title>
     <link
       rel="shortcut icon"
-      href="../public/static/imagenes/logo.png"
+      href="/public/static/imagenes/logo.png"
       type="image/x-icon"
     />
-    <link rel="stylesheet" href="../public/static/estilos/carrito.css" />
-    <link rel="stylesheet" href="../public/static/estilos/style.css" />
+    <link rel="stylesheet" href="/public/static/estilos/carrito.css" />
+    <link rel="stylesheet" href="/public/static/estilos/style.css" />
   </head>
   <body>
     <header>
       <div id="imagen-logo">
-        <img src="../public/static/imagenes/logo.png" alt="Imagen Logo" />
+        <img src="/public/static/imagenes/logo.png" alt="Imagen Logo" />
       </div>
       <div id="nombre-negocio">
         <h1>Ludonautica</h1>
@@ -23,7 +23,7 @@
       </div>
       <div id="selector-modo">
         <button type="button" id="btn-modo">
-          <img src="../public/static/iconos/darkmode.png" id="img-modo">
+          <img src="/public/static/iconos/darkmode.png" id="img-modo" />
         </button>
       </div>
       <div id="contenedor-menu">
@@ -38,8 +38,14 @@
                 <li><a href="/productos">Todos</a></li>
               </ul>
             </li>
-            <li id="li-carrito"><a href="/carrito">Carrito</a></li>
-            <li id="li-ticket"><a href="/ticket" id="link-ticket">Ticket</a></li>
+            <li id="li-carrito">
+              <a href="/carrito"
+                >Carrito <span id="cantidad-carrito" hidden>0</span></a
+              >
+            </li>
+            <li id="li-ticket">
+              <a href="/ticket" id="link-ticket">Ticket</a>
+            </li>
           </ul>
         </nav>
       </div>
@@ -47,41 +53,40 @@
     <main id="contenido">
       <h2>Carrito</h2>
       <div id="carrito">
-          <table id="tabla-carrito">
-            <thead>
-              <tr id="fila-titulos">
-                <td>Cant.</td>
-                <td class="col-descripcion">Descripcion</td>
-                <td>Importe</td>
-                <td></td>
-              </tr>
-            </thead>
-            <tbody id="productos-carrito"></tbody>
-            <tfoot id="total-carrito">
-              <tr id="fila-total">
-                <td>Total:</td>
-                <td id="total-compra" colspan="3"></td>
-              </tr>
-            </tfoot>
-          </table>
-          <button id="btn-vaciar">Vaciar Carrito</button>  
+        <table id="tabla-carrito">
+          <thead>
+            <tr id="fila-titulos">
+              <td>Cant.</td>
+              <td class="col-descripcion">Descripcion</td>
+              <td>Importe</td>
+              <td></td>
+            </tr>
+          </thead>
+          <tbody id="productos-carrito"></tbody>
+          <tfoot id="total-carrito">
+            <tr id="fila-total">
+              <td>Total:</td>
+              <td id="total-compra" colspan="3"></td>
+            </tr>
+          </tfoot>
+        </table>
+        <button id="btn-vaciar">Vaciar Carrito</button>
       </div>
       <div id="div-comprar">
-        <button id="btn-comprar">Finalizar Compra</button> 
+        <button id="btn-comprar">Finalizar Compra</button>
       </div>
       <dialog id="modal">
         <div id="contenido-modal">
           <div id="texto-modal">
             <h2>Esta por realizar una compra</h2>
-            <p>Desea continuar?</p>  
+            <p>Desea continuar?</p>
           </div>
           <div id="botones-modal">
             <button id="btn-confirmar">SI</button>
-            <button id="btn-volver">NO</button> 
-          </div>          
+            <button id="btn-volver">NO</button>
+          </div>
         </div>
-
-      </dialog> 
+      </dialog>
     </main>
     <footer>
       <section id="info-contacto">
@@ -95,7 +100,7 @@
       </section>
     </footer>
     <script src="/public/static/js/modo.js"></script>
-    <script src="/public/static/js/estadoCompra.js"></script>
+    <script src="/public/static/js/estadoCompra.js" defer></script>
     <script src="/public/static/js/carrito.js"></script>
   </body>
 </html>

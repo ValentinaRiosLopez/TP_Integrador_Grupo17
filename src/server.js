@@ -1,6 +1,5 @@
 import express from "express";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { envs } from "./config/env.js";
 import { connection } from "./ORM/database/db_config.js";
 import Productos from "./ORM/modelos/productos.js";
@@ -29,6 +28,8 @@ import {
   requerirSinCompraApi,
   guardarModo,
   leerModo,
+  validarDatosProducto,
+  validarIdProducto,
 } from "./middlewares.js";
 import puppeteer from "puppeteer";
 import ejs from "ejs";
@@ -258,189 +259,95 @@ app.post(
   },
 );
 
-app.post("/api/admin/productos", requerirAutorizacion, async (req, res) => {
-  try {
-    const { nombre, descripcion, precio, tipo, imagen } = req.body;
+app.post(
+  "/api/admin/productos",
+  requerirAutorizacion,
+  validarDatosProducto,
+  async (req, res) => {
+    try {
+      const productoNuevo = await Productos.create({
+        ...req.productoValidado,
+        activo: true,
+      });
 
-    if (
-      !nombre ||
-      !String(nombre).trim() ||
-      precio === undefined ||
-      precio === null ||
-      precio === ""
-    ) {
-      return res.status(400).json({
-        error: "El nombre y el precio son obligatorios",
+      return res.status(201).json({
+        mensaje: "Producto creado correctamente",
+        producto: productoNuevo,
+      });
+    } catch (error) {
+      console.error("Error al crear producto:", error);
+
+      return res.status(500).json({
+        error: "Error al crear el producto",
       });
     }
+  },
+);
 
-    if (
-      typeof nombre !== "string" ||
-      !nombre.trim() ||
-      nombre.trim().length > 100 ||
-      (descripcion != null &&
-        (typeof descripcion !== "string" || descripcion.length > 500))
-    ) {
-      return res.status(400).json({
-        error: "Nombre o descripción inválidos",
+app.get(
+  "/api/admin/productos/:id",
+  requerirAutorizacion,
+  validarIdProducto,
+  async (req, res) => {
+    try {
+      const producto = await Productos.findByPk(req.productoId);
+
+      if (!producto) {
+        return res.status(404).json({
+          error: "Producto no encontrado",
+        });
+      }
+
+      return res.status(200).json(producto);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        error: "Error al obtener el producto",
       });
     }
+  },
+);
 
-    const precioNumero = Number(precio);
+app.put(
+  "/api/admin/productos/:id",
+  requerirAutorizacion,
+  validarIdProducto,
+  validarDatosProducto,
+  async (req, res) => {
+    try {
+      const producto = await Productos.findByPk(req.productoId);
 
-    if (
-      precio === "" ||
-      precio == null ||
-      !Number.isFinite(precioNumero) ||
-      precioNumero < 0
-    ) {
-      return res.status(400).json({
-        error: "El precio debe ser un número válido mayor o igual a cero",
+      if (!producto) {
+        return res.status(404).json({
+          error: "Producto no encontrado",
+        });
+      }
+
+      await producto.update({
+        ...req.productoValidado,
+      });
+
+      return res.status(200).json({
+        mensaje: "Producto modificado correctamente",
+        producto,
+      });
+    } catch (error) {
+      console.error("Error al modificar producto:", error);
+
+      return res.status(500).json({
+        error: "Error al modificar producto",
       });
     }
-
-    if (!["juego", "dado"].includes(tipo)) {
-      return res.status(400).json({
-        error: "Tipo de producto inválido",
-      });
-    }
-
-    const categoria = tipo === "juego" ? "Juegos de mesa" : "Dados";
-
-    const productoNuevo = await Productos.create({
-      nombre: String(nombre).trim(),
-      descripcion: descripcion || null,
-      precio: precioNumero,
-      imagen: imagen || null,
-      categoria,
-      tipo,
-      activo: true,
-    });
-
-    return res.status(201).json({
-      mensaje: "Producto creado correctamente",
-      producto: productoNuevo,
-    });
-  } catch (error) {
-    console.error("Error al crear producto:", error);
-
-    return res.status(500).json({
-      error: "Error al crear el producto",
-    });
-  }
-});
-
-app.get("/api/admin/productos/:id", requerirAutorizacion, async (req, res) => {
-  try {
-    const id = Number(req.params.id);
-
-    if (id == null || id <= 0) {
-      return res.status(400).json({ error: "ID inválido" });
-    }
-
-    const producto = await Productos.findByPk(id);
-
-    if (!producto) {
-      return res.status(404).json({
-        error: "Producto no encontrado",
-      });
-    }
-
-    return res.status(200).json(producto);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      error: "Error al obtener el producto",
-    });
-  }
-});
-
-app.put("/api/admin/productos/:id", requerirAutorizacion, async (req, res) => {
-  try {
-    const id = Number(req.params.id);
-    const { nombre, descripcion, precio, tipo, imagen } = req.body;
-
-    if (id == null || id <= 0) {
-      return res.status(400).json({ error: "ID inválido" });
-    }
-
-    const producto = await Productos.findByPk(id);
-
-    if (!producto) {
-      return res.status(404).json({
-        error: "Producto no encontrado",
-      });
-    }
-
-    if (
-      typeof nombre !== "string" ||
-      !nombre.trim() ||
-      nombre.trim().length > 100 ||
-      (descripcion != null &&
-        (typeof descripcion !== "string" || descripcion.length > 500))
-    ) {
-      return res.status(400).json({
-        error: "Nombre o descripción inválidos",
-      });
-    }
-
-    const precioNumero = Number(precio);
-
-    if (
-      precio === "" ||
-      precio == null ||
-      !Number.isFinite(precioNumero) ||
-      precioNumero < 0
-    ) {
-      return res.status(400).json({
-        error: "Precio inválido",
-      });
-    }
-
-    if (!["juego", "dado"].includes(tipo)) {
-      return res.status(400).json({
-        error: "Tipo de producto inválido",
-      });
-    }
-
-    const categoria = tipo === "juego" ? "Juegos de mesa" : "Dados";
-
-    await producto.update({
-      nombre: nombre.trim(),
-      descripcion: descripcion || null,
-      precio: precioNumero,
-      tipo,
-      categoria,
-      imagen: imagen ?? producto.imagen,
-    });
-
-    return res.status(200).json({
-      mensaje: "Producto modificado correctamente",
-      producto,
-    });
-  } catch (error) {
-    console.error("Error al modificar producto:", error);
-
-    return res.status(500).json({
-      error: "Error al modificar producto",
-    });
-  }
-});
+  },
+);
 
 app.delete(
   "/api/admin/productos/:id",
   requerirAutorizacion,
+  validarIdProducto,
   async (req, res) => {
     try {
-      const id = Number(req.params.id);
-
-      if (!Number.isInteger(id) || id <= 0) {
-        return res.status(400).json({
-          error: "ID de producto inválido",
-        });
-      }
-
-      const producto = await Productos.findByPk(id);
+      const producto = await Productos.findByPk(req.productoId);
 
       if (!producto) {
         return res.status(404).json({
@@ -474,17 +381,10 @@ app.delete(
 app.put(
   "/api/admin/productos/:id/activar",
   requerirAutorizacion,
+  validarIdProducto,
   async (req, res) => {
     try {
-      const id = Number(req.params.id);
-
-      if (!id === null || id <= 0) {
-        return res.status(400).json({
-          error: "ID de producto inválido",
-        });
-      }
-
-      const producto = await Productos.findByPk(id);
+      const producto = await Productos.findByPk(req.productoId);
 
       if (!producto) {
         return res.status(404).json({
@@ -514,6 +414,37 @@ app.put(
     }
   },
 );
+
+
+app.get("/admin/historico-ventas", requerirAutorizacion, async (req, res) => {
+  try {
+    const ventas = await Ventas.findAll({
+      include: [
+        {
+          model: DetalleVenta,
+          as: "detalles",
+          include: [
+            {
+              model: Productos,
+              as: "producto",
+            },
+          ],
+        },
+      ],
+      order: [["id", "DESC"]],
+    });
+
+    return res.render("admin/historicoVentas", {
+      titulo: "Histórico de ventas",
+      ventas,
+    });
+
+  } catch (error) {
+    console.error("Error al obtener el histórico:", error);
+    return res.status(500).send("Error al cargar el histórico de ventas");
+  }
+});
+
 
 try {
   await connection.authenticate();

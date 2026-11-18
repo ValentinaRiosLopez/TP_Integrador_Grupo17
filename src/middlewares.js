@@ -1,4 +1,3 @@
-
 import jwt from "jsonwebtoken";
 import { envs } from "./config/env.js";
 
@@ -10,10 +9,9 @@ const EXP_COOKIE_AUTORIZACION = 1000 * 60 * 30;
 const EXP_COOKIE_CARRITO = 1000 * 60 * 10;
 const EXP_COOKIE_MODO = 1000 * 60 * 60;
 
-
 // Función para generar el token
-async function generarJWT(payload,  expiresIn = "10m") {
-  const token = jwt.sign(payload, secret, { expiresIn});
+async function generarJWT(payload, expiresIn = "10m") {
+  const token = jwt.sign(payload, secret, { expiresIn });
   return token;
 }
 
@@ -42,8 +40,7 @@ export async function setearCookieDeAutorizacion(req, res, next = () => {}) {
 }
 
 export async function emitirCookieCliente(res, { name, compra = null }) {
-
-  const token = await generarJWT({ name, compra }, EXP_COOKIE_CLIENTE/1000 );
+  const token = await generarJWT({ name, compra }, EXP_COOKIE_CLIENTE / 1000);
 
   res.cookie("cliente", token, {
     path: "/",
@@ -69,8 +66,6 @@ export async function setearCookieCliente(req, res, next) {
   next();
 }
 
-
-
 export function leerCookieCliente(req, res, next) {
   res.locals.cliente = null; //aca inicializo la variable de cliente para que siempre exista
 
@@ -82,7 +77,7 @@ export function leerCookieCliente(req, res, next) {
     } catch {
       //sino borra la cookie invalida
       res.clearCookie("cliente", { path: "/" });
-      res.clearCookie("carrito", { path: "/" }); 
+      res.clearCookie("carrito", { path: "/" });
     }
   }
   next();
@@ -91,7 +86,7 @@ export function leerCookieCliente(req, res, next) {
 //si pasa el tiempo de expiracion devuelve al cliente al login
 // Revisar si no deberíamos buscar en la req la cookie cliente
 export function requerirCliente(req, res, next) {
-  if (!res.locals.cliente){ 
+  if (!res.locals.cliente) {
     return res.redirect("/");
   }
   next();
@@ -104,12 +99,11 @@ export function requerirClienteApi(req, res, next) {
   next();
 }
 
-
 export function requerirAutorizacion(req, res, next) {
   const token = req.cookies?.autorizacion;
 
   if (!token) {
-    console.error({error: "No tenés una sesión activa"})
+    console.error({ error: "No tenés una sesión activa" });
     return res.redirect("/admin/login");
   }
 
@@ -213,10 +207,10 @@ export function requerirSinCompraApi(req, res, next){
 
 //middleware modo claro/oscuro
 
-export function leerModo(req){
+export function leerModo(req) {
   try {
     const modo = req.cookies?.modo ?? "claro";
-    return modo
+    return modo;
   } catch {
     return "claro";
   }
@@ -229,4 +223,86 @@ export function guardarModo(res, modo) {
     sameSite: "Lax",
     maxAge: EXP_COOKIE_MODO,
   });
+}
+
+export function validarDatosProducto(req, res, next) {
+  const { nombre, descripcion, precio, tipo, imagen } = req.body ?? {};
+
+  if (
+    typeof nombre !== "string" ||
+    !nombre.trim() ||
+    nombre.trim().length > 100
+  ) {
+    return res.status(400).json({
+      error: "Nombre inválido",
+    });
+  }
+
+  if (
+    descripcion != null &&
+    (typeof descripcion !== "string" || descripcion.length > 500)
+  ) {
+    return res.status(400).json({
+      error: "Descripción inválida",
+    });
+  }
+
+  const precioNumero = Number(precio);
+
+  if (
+    precio == null ||
+    !["string", "number"].includes(typeof precio) ||
+    String(precio).trim() === "" ||
+    !Number.isFinite(precioNumero) ||
+    precioNumero < 0 ||
+    precioNumero > 9999999999.99
+  ) {
+    return res.status(400).json({
+      error: "Precio inválido",
+    });
+  }
+
+  if (!["juego", "dado"].includes(tipo)) {
+    return res.status(400).json({
+      error: "Tipo de producto inválido",
+    });
+  }
+
+  if (
+    imagen != null &&
+    (typeof imagen !== "string" ||
+      (imagen !== "" && (imagen.length > 255 || imagen.includes(".."))))
+  ) {
+    return res.status(400).json({
+      error: "Ruta de imagen inválida",
+    });
+  }
+
+  req.productoValidado = {
+    nombre: nombre.trim(),
+    descripcion: descripcion?.trim() || null,
+    precio: precioNumero,
+    tipo,
+    categoria: tipo === "juego" ? "Juegos de mesa" : "Dados",
+  };
+
+  if (imagen !== undefined) {
+    req.productoValidado.imagen = imagen || null;
+  }
+
+  next();
+}
+
+
+export function validarIdProducto(req, res, next) {
+  const id = Number(req.params.id);
+
+  if (!Number.isSafeInteger(id) || id <= 0) {
+    return res.status(400).json({
+      error: "ID de producto inválido",
+    });
+  }
+
+  req.productoId = id;
+  next();
 }

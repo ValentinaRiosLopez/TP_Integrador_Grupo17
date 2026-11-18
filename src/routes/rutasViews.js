@@ -7,7 +7,8 @@ import {
     requerirCompra, 
     requerirAutorizacion,
     leerModo,
-    guardarModo
+    guardarModo,
+    validarIdProducto,
 } from "../middlewares.js";
 import Productos from "../ORM/modelos/productos.js";
 
@@ -80,18 +81,14 @@ router.get("/admin/productos/nuevo", requerirAutorizacion, async (req, res) => {
   });
 });
 
-router.get("/admin/productos/:id/editar", requerirAutorizacion, (req, res) => {
-  const id = Number(req.params.id);
-
-  if (id == null || id <= 0) {
-    return res.status(400).send("ID de producto inválido");
-  }
-
-  res.render("admin/newProduct", {
-    titulo: "Productos | Modificar",
-    modo: "editar",
-    productoId: id,
-  });
-});
+app.get( "/admin/productos/:id/editar", requerirAutorizacion, validarIdProducto,
+  (req, res) => {
+    res.render("admin/newProduct", {
+      titulo: "Productos | Modificar",
+      modo: "editar",
+      productoId: req.productoId,
+    });
+  },
+);
 
 export default router;

@@ -1,0 +1,100 @@
+
+#historico-ventas {
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+}
+
+#buscar-ventas {
+  padding: 10px;
+  margin: 20px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 300px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+#tabla-ventas {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#tabla-ventas th,
+#tabla-ventas td {
+  border: 1px solid #ccc;
+  padding: 12px;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+#tabla-ventas th {
+  background-color: #1f2d13;
+  color: white;
+}
+
+.lista-productos {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.lista-productos li {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 5px 0;
+}
+
+.lista-productos li:not(:last-child) {
+  border-bottom: 1px solid #eee;
+}
+
+#sin-resultados {
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  #historico-ventas {
+    padding: 15px;
+  }
+
+  #buscar-ventas {
+    width: 100%;
+  }
+
+  #tabla-ventas thead {
+    display: none;
+  }
+
+  #tabla-ventas,
+  #tabla-ventas tbody,
+  #tabla-ventas tr,
+  #tabla-ventas td {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  #tabla-ventas tr {
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+
+  #tabla-ventas td {
+    border: none;
+  }
+
+  #tabla-ventas td::before {
+    content: attr(data-label);
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+}
+
+#tabla-ventas tr[hidden]{
+  display: none;
+}

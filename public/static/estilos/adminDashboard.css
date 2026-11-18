@@ -65,6 +65,22 @@ body {
   background-color: rgb(65, 88, 45);
 }
 
+#btn-historico-ventas { display: inline-block;
+  padding: 12px 20px;
+  background-color: rgb(93, 131, 59);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+
+#btn-historico-ventas:hover {
+  background-color: rgb(141, 192, 97);
+}
+
+
 .estado-activo {
   color: green;
   font-weight: bold;

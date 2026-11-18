@@ -69,5 +69,9 @@ router.get("/admin/historico-ventas",
   ControladorAdmin.getVentas,
 );
 
+router.get("/salir/admin",
+  ControladorAdmin.borrarAutorizacion,
+);
+
 
 export default router;

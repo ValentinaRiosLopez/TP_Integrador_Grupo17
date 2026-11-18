@@ -260,6 +260,11 @@ export const getVentas = async (req, res) => {
   }
 }
 
+export const borrarAutorizacion = (req, res) => {
+  res.clearCookie("autorizacion");
+  res.redirect("/");
+};
+
 export default {
     altaUsuario,
     loginUsuarios,
@@ -269,4 +274,5 @@ export default {
     borrarProducto,
     activarProducto,
     getVentas,
+    borrarAutorizacion,
 };

@@ -54,6 +54,11 @@ export async function emitirCookieCliente(res, { name, compra = null }) {
 //seteo la cookie de cliente
 export async function setearCookieCliente(req, res, next) {
   const name = req.body?.name?.trim();
+
+  if(req.cookies?.carrito){
+    res.clearCookie("carrito", { path: "/" });
+  };
+
   const token = await generarJWT({
     name,
     compra: null,
@@ -80,6 +85,25 @@ export function leerCookieCliente(req, res, next) {
       res.clearCookie("carrito", { path: "/" });
     }
   }
+  next();
+}
+
+// Si la sesión es válida y ya pasó la mitad de su vida, vuelve a emitir la cookie.
+export async function renovarCookieCliente(req, res, next) {
+  const cliente = res.locals.cliente;
+
+  if (cliente?.exp) {
+    const restante = cliente.exp * 1000 - Date.now();
+
+    if (restante < UMBRAL_RENOVACION) {
+      // conserva name y compra: el ticket sigue accesible
+      await emitirCookieCliente(res, {
+        name: cliente.name,
+        compra: cliente.compra ?? null,
+      });
+    }
+  }
+
   next();
 }
 

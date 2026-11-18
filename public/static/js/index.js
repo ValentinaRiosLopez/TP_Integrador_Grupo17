@@ -1,5 +1,6 @@
 function $(id){return document.getElementById(id)};
 
+
 async function consultarEstadoCliente(){
     try {
         const response = await fetch("/api/cliente", {method: 'GET'});
@@ -23,7 +24,8 @@ async function consultarEstadoCliente(){
            $("contenido-cliente").style.display = "block"; 
            $("nombre-cliente").textContent = name;
            $("li-productos").style.display = "block";
-           $("li-carrito").style.display = "block"; 
+           $("li-carrito").style.display = "block";
+           
         }
 
     }catch(e){
@@ -32,4 +34,7 @@ async function consultarEstadoCliente(){
 
 }
 
+
+
 consultarEstadoCliente();
+

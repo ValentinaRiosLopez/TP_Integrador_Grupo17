@@ -93,3 +93,32 @@ h2 {
   background-color: rgb(31,45,19);
   text-decoration: underline;
 }
+
+#modal{
+  margin: auto;
+  text-align: center;
+  background-color: rgb(55,70,15);
+  border-radius: 12px;
+}
+
+#botones-modal{
+  margin: 10px;
+  margin-top: 15px;
+}
+
+#botones-modal button{
+  color: rgb(31, 45, 19);
+  background-color: rgb(198, 199, 166);
+  border-radius: 5px;
+  border: 2px solid rgb(31, 45, 19);
+  padding: 2px;
+  margin: 5px;
+  cursor: pointer;
+  padding: 3px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}

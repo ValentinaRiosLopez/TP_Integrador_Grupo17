@@ -154,16 +154,18 @@ header {
 
 #sobre-nosotros {
   text-align: center;
-  margin: 10px;
+  margin: auto;
+  width: 60%;
+  padding: 20px;
 }
 
-#sobre-nosotros h3 {
+#sobre-nosotros h2 {
   font-family: "Titulos";
 }
 
 #sobre-nosotros p {
-  font-size: 12px;
-  margin-bottom: 30px;
+  font-size: 16px;
+  
 }
 
 #sobre-nosotros:hover {
@@ -171,7 +173,8 @@ header {
 }
 
 #productos-destacados {
-
+  margin: auto;
+  margin-top: 20px;
   text-align: center;
   place-items: center;
 }

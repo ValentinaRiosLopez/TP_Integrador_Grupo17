@@ -195,6 +195,20 @@ export function requerirCompraApi(req, res, next) {
   next();
 }
 
+export function requerirSinCompra(req, res, next){
+  if (res.locals.cliente?.compra) {
+    return res.redirect("/");
+  }
+  next(); 
+}
+
+export function requerirSinCompraApi(req, res, next){
+  if (res.locals.cliente?.compra) {
+    return res.status(403).json({ error: "Ya se realizo una compra." });
+  }
+  next(); 
+}
+
 
 //middleware modo claro/oscuro
 

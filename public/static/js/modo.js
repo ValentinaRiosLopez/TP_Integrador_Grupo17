@@ -68,10 +68,10 @@ async function actualizarPagina() {
 
   if (modo === "oscuro") {
     document.body.classList.add("darkMode");
-    $("img-modo").src = "../public/static/iconos/lightmode.png";
+    $("img-modo").src = "/public/static/iconos/lightmode.png";
   } else {
     document.body.classList.remove("darkMode");
-    $("img-modo").src = "../public/static/iconos/darkmode.png";
+    $("img-modo").src = "/public/static/iconos/darkmode.png";
   }
 }
 

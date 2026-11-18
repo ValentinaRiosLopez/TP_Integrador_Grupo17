@@ -10,9 +10,6 @@
   padding: 30px;
   place-items: center;
 
-  @media (max-width: 600px) {
-    grid-template-columns: auto;
-  }
 }
 
 .producto {
@@ -33,7 +30,6 @@
 }
 
 .imagen-producto-container img {
-  height: 231px;
   max-width: 90%;
 }
 
@@ -119,9 +115,17 @@
   text-align: center;
 }
 
+#titulo-productos {
+  text-align: center;
+}
+
 @media (max-width: 550px) {
   #lista-productos {
     display: grid;
     grid-template-columns: 1fr 1fr;
+  }
+
+  .descripcion-producto{
+    display: none;
   }
 }

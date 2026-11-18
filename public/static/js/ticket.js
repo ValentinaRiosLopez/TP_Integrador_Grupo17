@@ -28,7 +28,7 @@ async function traerDatosVenta(idVenta){
 
 async function llenarTicket(){
     const id = new URLSearchParams(location.search).get("venta");
-    //$("link-descarga").href = `/api/ticket/descargar/${id}`;
+    $("link-descarga").href = `/api/ticket/descargar/${id}`;
     const venta = await traerDatosVenta(id);
 
     if(!venta) return;
@@ -71,42 +71,6 @@ async function llenarTicket(){
     
 }
 
-async function descargarPdf() {
-  const id = new URLSearchParams(location.search).get("venta");
-  const boton = $("btn-descargar");
-  const textoOriginal = boton.textContent;
-
-  boton.disabled = true; // evita lanzar dos PDFs con un doble clic
-  boton.textContent = "Generando PDF...";
-
-  try {
-    const response = await fetch(`/api/ticket/descargar/${encodeURIComponent(id)}`);
-
-    if (response.status === 401) {
-      location.reload(); // la sesión venció: el servidor decide a dónde mandarlo
-      return;
-    }
-    if (!response.ok) {
-      alert("No se pudo generar el PDF.");
-      return;
-    }
-
-    const blob = await response.blob();
-    const url = URL.createObjectURL(blob);
-    const enlace = document.createElement("a");
-    enlace.href = url;
-    enlace.download = `factura-${id}.pdf`;
-    enlace.click();
-    URL.revokeObjectURL(url);
-  } catch {
-    alert("Falló la descarga.");
-  } finally {
-    boton.disabled = false;
-    boton.textContent = textoOriginal;
-  }
-}
-
-$("btn-descargar").addEventListener("click", descargarPdf);
 
 
 llenarTicket();

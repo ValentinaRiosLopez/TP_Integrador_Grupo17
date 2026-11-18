@@ -9,8 +9,7 @@ import { envs } from "../config/env.js";
 const __dirname = import.meta.dirname;
 const carpetaRaiz = path.join(__dirname, "..", "..");
 
-
-async function crearPDF(ticket) {
+async function getHTML(ticket){
   const baseUrl = `http://localhost:${envs.port}`;
 
   const html = await ejs.renderFile(
@@ -20,23 +19,9 @@ async function crearPDF(ticket) {
 
   const htmlConBase = html.replace("<head>", `<head><base href="${baseUrl}/">`);
 
-  const navegador = await puppeteer.launch({ headless: true });
+  return htmlConBase;
+}
 
-  try {
-    const pagina = await navegador.newPage();
-
-    await pagina.setContent(htmlConBase);
-
-    const pdfBuffer = await pagina.pdf({
-      format: "A4",
-      printBackground: false,
-    });
-
-    return pdfBuffer;
-  } finally {
-    await navegador.close(); // siempre, aunque falle algo arriba
-  }
-};
 
 function formatearFecha(iso) {
   const fecha = new Date(iso);
@@ -133,34 +118,60 @@ export const getVentaPorId = async (req, res) => {
 
 
 export const getDescargaPDF = async (req, res) => {
-    const id = Number(req.params.id);
+  const id = Number(req.params.id);
 
-    if (!Number.isInteger(id)) {
-        return res.status(400).json({ error: "ID inválido" });
-    }
+  if (!Number.isInteger(id)) {
+      return res.status(400).json({ error: "ID inválido" });
+  }
 
-    if (res.locals.cliente.compra !== id) {
+  if (res.locals.cliente.compra !== id) {
+      return res.status(404).json({ error: "Venta no encontrada" });
+  }
+
+  let browser;
+
+  try {
+    const ticket = await obtenerVenta(id);
+
+    if (!ticket) {
         return res.status(404).json({ error: "Venta no encontrada" });
     }
 
-    try {
-        const ticket = await obtenerVenta(id);
+    const html = await getHTML(ticket);
 
-        if (!ticket) {
-        return res.status(404).json({ error: "Venta no encontrada" });
-        }
+    browser = await puppeteer.launch({
+        headless: true
+    });
 
-        const pdf = await crearPDF(ticket);
+    const pagina = await browser.newPage();
 
-        res.set({
+    await pagina.setContent(html, {
+        waitUntil: "networkidle0"
+    });
+
+    const pdfBuffer = await pagina.pdf({
+        format: "A4",
+        printBackground: true
+    });
+
+    res.set({
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="factura-${id}.pdf"`,
-        });
-        res.status(200).send(Buffer.from(pdf));
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "No se pudo generar el PDF" });
+        "Content-Disposition": `attachment; filename="factura-${id}.pdf"`
+    });
+
+    return res.status(200).send(pdfBuffer);
+
+  } catch (error) {
+
+    return res.status(500).json({
+        error: "No se pudo generar el PDF"
+    });
+    
+  } finally {
+    if (browser) {
+        await browser.close();
     }
+  }
 
 }
 

@@ -1,6 +1,5 @@
 import express from "express";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { envs } from "./config/env.js";
 import { connection } from "./ORM/database/db_config.js";
 import Productos from "./ORM/modelos/productos.js";
@@ -898,6 +897,37 @@ app.put(
     }
   },
 );
+
+
+app.get("/admin/historico-ventas", requerirAutorizacion, async (req, res) => {
+  try {
+    const ventas = await Ventas.findAll({
+      include: [
+        {
+          model: DetalleVenta,
+          as: "detalles",
+          include: [
+            {
+              model: Productos,
+              as: "producto",
+            },
+          ],
+        },
+      ],
+      order: [["id", "DESC"]],
+    });
+
+    return res.render("admin/historicoVentas", {
+      titulo: "Histórico de ventas",
+      ventas,
+    });
+
+  } catch (error) {
+    console.error("Error al obtener el histórico:", error);
+    return res.status(500).send("Error al cargar el histórico de ventas");
+  }
+});
+
 
 try {
   await connection.authenticate();

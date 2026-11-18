@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -23,7 +23,7 @@
       </div>
       <div id="selector-modo">
         <button type="button" id="btn-modo">
-          <img src="/public/static/iconos/darkmode.png" id="img-modo">
+          <img src="/public/static/iconos/darkmode.png" id="img-modo" />
         </button>
       </div>
       <div id="contenedor-menu">
@@ -38,54 +38,61 @@
                 <li><a href="/productos">Todos</a></li>
               </ul>
             </li>
-            <li id="li-carrito"><a href="/carrito">Carrito</a></li>
-            <li id="li-ticket"><a href="/ticket" id="link-ticket">Ticket</a></li>
+            <li id="li-carrito">
+              <a href="/carrito"
+                >Carrito <span id="cantidad-carrito" hidden>0</span></a
+              >
+            </li>
+            <li id="li-ticket">
+              <a href="/ticket" id="link-ticket">Ticket</a>
+            </li>
           </ul>
         </nav>
       </div>
     </header>
     <main id="contenido">
       <div id="ticket">
-          <div id="datos">
-            <p class="titulo">LUDONAUTICA</p>
-            
-            <p>Compra Nº<span id="id-compra"></span></p>
-            
-            <p>Cliente: <span id="nombre-cliente"></span></p>
-            
-            <p>Fecha: <span id="fecha-compra"></span></p>
-            <br>
-          </div>
-          <div id="detalle">
-            <p class="titulo">Detalle</p>
-            <table id="tbl-detalle">
-              <thead>
-                <tr class="fila">
-                  <td>Cant.</td>
-                  <td class="col-descripcion">Descripcion</td>
-                  <td class="col-importe">Importe</td>
-                </tr>
-              </thead>
-              <tbody id="detalle-productos"></tbody>
-              <tfoot id="total-carrito">
-                <tr class="fila">
-                  <td>Total:</td>
-                  <td id="total-compra" colspan="2">0.00</td>
-                </tr>
-              </tfoot>            
-            </table>
-          </div>
-          <p>¡Gracias por comprar en ludonautica! :)</p> 
+        <div id="datos">
+          <p class="titulo">LUDONAUTICA</p>
+
+          <p>Compra Nº<span id="id-compra"></span></p>
+
+          <p>Cliente: <span id="nombre-cliente"></span></p>
+
+          <p>Fecha: <span id="fecha-compra"></span></p>
+          <br />
+        </div>
+        <div id="detalle">
+          <p class="titulo">Detalle</p>
+          <table id="tbl-detalle">
+            <thead>
+              <tr class="fila">
+                <td>Cant.</td>
+                <td class="col-descripcion">Descripcion</td>
+                <td class="col-importe">Importe</td>
+              </tr>
+            </thead>
+            <tbody id="detalle-productos"></tbody>
+            <tfoot id="total-carrito">
+              <tr class="fila">
+                <td>Total:</td>
+                <td id="total-compra" colspan="2">0.00</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <p>¡Gracias por comprar en ludonautica! :)</p>
       </div>
 
       <div id="div-descargar">
-        <button id="btn-descargar"><a id="link-descarga" href="#">Descargar como PDF</a></button> 
+        <button id="btn-descargar">
+          <a id="link-descarga" href="#">Descargar como PDF</a>
+        </button>
       </div>
 
       <form action="/salir" method="POST">
         <button type="submit" id="btn-salir">Salir</button>
       </form>
-      
     </main>
     <footer>
       <section id="info-contacto">
@@ -99,7 +106,7 @@
       </section>
     </footer>
     <script src="/public/static/js/modo.js"></script>
-    <script src="/public/static/js/estadoCompra.js"></script>
+    <script src="/public/static/js/estadoCompra.js" defer></script>
     <script src="/public/static/js/ticket.js"></script>
   </body>
 </html>

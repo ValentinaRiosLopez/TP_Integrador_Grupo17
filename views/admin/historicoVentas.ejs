@@ -1,0 +1,105 @@
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title><%= titulo %> | Ludonáutica</title>
+
+    <link rel="icon" type="image/png" href="/public/static/imagenes/logo.png" />
+
+    <link rel="stylesheet" href="/public/static/estilos/adminCommons.css" />
+    <link rel="stylesheet" href="/public/static/estilos/adminHistoricoVentas.css" />
+
+    <script src="/public/static/js/historicoVentas.js" defer></script>
+  </head>
+
+  <body class="admin-page">
+    <header class="admin-header">
+      <a href="/" class="admin-brand">
+        <img src="/public/static/imagenes/logo.png" alt="Logo" />
+        <span><%= titulo %></span>
+      </a>
+
+      <nav>
+        <a href="/">Volver al inicio</a>
+        <a href="/admin/dashboard">Volver al dashboard</a>
+      </nav>
+    </header>
+
+    <main class="admin-main">
+      <section id="historico-ventas">
+        <h2>Histórico de ventas</h2>
+
+        <%
+          const moneda = (valor) => Number(valor).toLocaleString("es-AR", {
+            style: "currency",
+            currency: "ARS"
+          });
+        %>
+
+        <% if (ventas.length === 0) { %>
+
+          <p>Todavía no hay ventas registradas.</p>
+
+        <% } else { %>
+
+          <table id="tabla-ventas">
+            <thead>
+              <tr>
+                <th>N.º venta</th>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Detalle de productos</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% ventas.forEach((venta) => { %>
+                <tr class="fila-venta">
+                  <td data-label="N.º venta">
+                    <%= venta.id %>
+                  </td>
+
+                  <td data-label="Fecha">
+                    <%= venta.fecha
+                      ? new Date(venta.fecha).toLocaleString("es-AR")
+                      : "Sin fecha" %>
+                  </td>
+
+                  <td data-label="Cliente">
+                    <%= venta.nombre_cliente %>
+                  </td>
+
+                  <td data-label="Productos">
+                    <ul class="lista-productos">
+                      <% venta.detalles.forEach((detalle) => { %>
+                        <li>
+                          <span>
+                            <%= detalle.producto?.nombre ?? "Producto eliminado" %>
+                            (x<%= detalle.cantidad %>)
+                          </span>
+
+                          <strong>
+                            <%= moneda(detalle.subtotal) %>
+                          </strong>
+                        </li>
+                      <% }); %>
+                    </ul>
+                  </td>
+
+                  <td data-label="Total">
+                    <strong><%= moneda(venta.total) %></strong>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+
+        <% } %>
+      </section>
+    </main>
+  </body>
+</html>

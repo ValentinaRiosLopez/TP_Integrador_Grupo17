@@ -71,14 +71,30 @@ export async function setearCookieCliente(req, res, next) {
   next();
 }
 
-export function leerCookieCliente(req, res, next) {
+export async function leerCookieCliente(req, res, next) {
   res.locals.cliente = null; //aca inicializo la variable de cliente para que siempre exista
 
   const token = req.cookies?.cliente; //leo la cookie
 
   if (token) {
     try {
-      res.locals.cliente = jwt.verify(token, secret); //verifico el token y lo guardo en locals para poder usar el nombre despues
+      const cliente = jwt.verify(token, secret); //verifico la sesion
+      res.locals.cliente = cliente;
+
+      // Renuevo la cookie
+      const nuevoToken = await generarJWT({
+          name: cliente.name,
+          compra: cliente.compra
+      }, EXP_COOKIE_CLIENTE / 1000);
+
+      res.cookie("cliente", nuevoToken, {
+          path: "/",
+          httpOnly: true,
+          secure: false,
+          sameSite: "Lax",
+          maxAge: EXP_COOKIE_CLIENTE,
+      });
+
     } catch {
       //sino borra la cookie invalida
       res.clearCookie("cliente", { path: "/" });
@@ -88,27 +104,7 @@ export function leerCookieCliente(req, res, next) {
   next();
 }
 
-// Si la sesión es válida y ya pasó la mitad de su vida, vuelve a emitir la cookie.
-export async function renovarCookieCliente(req, res, next) {
-  const cliente = res.locals.cliente;
 
-  if (cliente?.exp) {
-    const restante = cliente.exp * 1000 - Date.now();
-
-    if (restante < UMBRAL_RENOVACION) {
-      // conserva name y compra: el ticket sigue accesible
-      await emitirCookieCliente(res, {
-        name: cliente.name,
-        compra: cliente.compra ?? null,
-      });
-    }
-  }
-
-  next();
-}
-
-//si pasa el tiempo de expiracion devuelve al cliente al login
-// Revisar si no deberíamos buscar en la req la cookie cliente
 export function requerirCliente(req, res, next) {
   if (!res.locals.cliente) {
     return res.redirect("/");

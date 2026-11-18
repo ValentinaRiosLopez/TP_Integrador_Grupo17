@@ -1,4 +1,4 @@
-const PRODS_POR_PAGINA = 9;
+const PRODS_POR_PAGINA = 6;
 let productos = [];
 let paginaActual = 1;
 

@@ -1,63 +1,28 @@
 import { Router } from "express";
-import Productos from "../ORM/modelos/productos.js";
 import {
     requerirClienteApi, 
     requerirSinCompraApi,
 } from "../middlewares.js";
+import ControladorProductos from "../controllers/controladorProductos.js"
 
 const router = Router();
 
-router.get("/api/productos", requerirClienteApi, requerirSinCompraApi,async (req, res) => {
-  try {
-    const productos = await Productos.findAll({
-      where: {
-        activo: true,
-      },
-    });
+router.get("/api/productos", 
+  requerirClienteApi, 
+  requerirSinCompraApi, 
+  ControladorProductos.getProductos
+);
 
-    res.status(200).json(productos);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      error: "Error al obtener productos",
-    });
-  }
-});
+router.get("/api/productos/juegos", 
+  requerirClienteApi, 
+  requerirSinCompraApi, 
+  ControladorProductos.getJuegos
+);
 
-router.get("/api/productos/juegos", requerirClienteApi, requerirSinCompraApi, async (req, res) => {
-  try {
-    const productos = await Productos.findAll({
-      where: {
-        activo: true,
-        tipo: "juego",
-      },
-    });
-
-    res.status(200).json(productos);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      error: "Error al obtener juegos de mesa",
-    });
-  }
-});
-
-router.get("/api/productos/dados", requerirClienteApi, requerirSinCompraApi, async (req, res) => {
-  try {
-    const productos = await Productos.findAll({
-      where: {
-        activo: true,
-        tipo: "dado",
-      },
-    });
-
-    res.status(200).json(productos);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      error: "Error al obtener dados",
-    });
-  }
-});
+router.get("/api/productos/dados", 
+  requerirClienteApi, 
+  requerirSinCompraApi, 
+  ControladorProductos.getDados
+);
 
 export default router;

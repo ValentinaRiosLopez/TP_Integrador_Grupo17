@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import { connection } from "../database/db_config.js";
+import DetalleVenta from "./detalleVenta.js";
 
 const Ventas = connection.define(
     "Ventas",
@@ -32,6 +33,7 @@ const Ventas = connection.define(
     
 );
 
-
+Ventas.hasMany(DetalleVenta, { foreignKey: "id_venta", as: "detalles" });
+DetalleVenta.belongsTo(Ventas, { foreignKey: "id_venta" });
 
 export default Ventas;

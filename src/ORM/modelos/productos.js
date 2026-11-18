@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import { connection } from "../database/db_config.js";
+import DetalleVenta from "./detalleVenta.js";
 
 const Productos = connection.define(
   "Productos",
@@ -34,11 +35,6 @@ const Productos = connection.define(
       allowNull: true,
     },
 
-    categoria: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-
     tipo: {
       type: DataTypes.ENUM("juego", "dado", "accesorio"),
       allowNull: false,
@@ -55,5 +51,11 @@ const Productos = connection.define(
     timestamps: true,
   },
 );
+
+DetalleVenta.belongsTo(Productos, {
+  foreignKey: "id_producto",
+  as: "producto",
+});
+Productos.hasMany(DetalleVenta, { foreignKey: "id_producto" });
 
 export default Productos;

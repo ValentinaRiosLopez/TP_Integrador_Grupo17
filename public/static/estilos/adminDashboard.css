@@ -81,17 +81,125 @@ body {
 }
 
 .btn-editar-producto,
-.btn-eliminar-producto {
+.btn-eliminar-producto,
+.btn-disponibilizar-producto {
   align-items: center;
   background-color: transparent;
   border: 1px solid #ccc;
+  display: flex;
+  gap: 4px;
   padding: 6px 12px;
   border-radius: 20px;
+  transition: background-color 0.2s;
 }
 
 .btn-editar-producto:hover {
   border: 1px solid #030303;
+  background-color: rgba(0, 0, 0, 0.4);
+  cursor: pointer;
 }
 .btn-eliminar-producto:hover {
   border: 1px solid red;
+  background-color: rgba(247, 0, 0, 0.4);
+  cursor: pointer;
+}
+.btn-disponibilizar-producto:hover {
+  border: 1px solid green;
+  background-color: rgb(0, 119, 10, 0.4);
+  cursor: pointer;
+}
+
+.btn-acciones {
+  display: flex;
+  flex-direction: row;
+  grid-gap: 8px;
+}
+
+#modal-confirmacion {
+  border: none;
+  border-radius: 12px;
+  padding: 28px;
+  max-width: 400px;
+  width: calc(100% - 40px);
+  box-sizing: border-box;
+}
+
+#modal-confirmacion::backdrop {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.acciones-modal {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.acciones-modal button {
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#btn-confirmar {
+  background-color: rgb(31, 45, 19);
+  color: white;
+}
+
+@media (max-width: 768px) {
+
+  .encabezado-productos {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  #btn-agregar-producto {
+    width: 100%;
+  }
+
+  #tabla-productos {
+    width: 100%;
+    min-width: 0;
+  }
+
+  #tabla-productos thead {
+    display: none;
+  }
+
+  #tabla-productos tbody,
+  #tabla-productos tr {
+    display: block;
+  }
+
+  #tabla-productos tr {
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+
+  #tabla-productos td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    text-align: right;
+  }
+
+  /* ::before: crea un pseudoelemento al comienzo del contenido de cada celda. */ 
+  #tabla-productos td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    text-align: left;
+  }
+
+  .btn-acciones {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .imagen-producto {
+    width: 50px;
+    height: 50px;
+  }
 }

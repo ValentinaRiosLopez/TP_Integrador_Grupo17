@@ -9,7 +9,7 @@ function rutaApi() {
   return "/api/productos";
 }
 
-async function traerProductos(){
+async function traerProductos() {
   try {
     const respuesta = await fetch(rutaApi());
 
@@ -30,7 +30,6 @@ async function traerProductos(){
 }
 
 function crearTarjeta(producto) {
-    
   const nuevoProducto = document.createElement("div");
   nuevoProducto.className = "producto";
 
@@ -133,24 +132,25 @@ function irAPagina(pagina) {
   const url = new URL(location.href);
   url.searchParams.set("pagina", pagina);
 
-  history.pushState({}, "", url.href); 
+  history.pushState({}, "", url.href);
 
   mostrarPagina(pagina);
-  
 }
 
 async function iniciar() {
   const datos = await traerProductos();
   if (!datos) return;
 
-  console.log(datos);
-
   productos = datos;
   mostrarPagina(leerPaginaUrl());
 }
 
-document.getElementById("pag-anterior").addEventListener("click", () => irAPagina(paginaActual - 1));
-document.getElementById("pag-siguiente").addEventListener("click", () => irAPagina(paginaActual + 1));
+document
+  .getElementById("pag-anterior")
+  .addEventListener("click", () => irAPagina(paginaActual - 1));
+document
+  .getElementById("pag-siguiente")
+  .addEventListener("click", () => irAPagina(paginaActual + 1));
 
 window.addEventListener("popstate", () => mostrarPagina(leerPaginaUrl()));
 

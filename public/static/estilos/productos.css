@@ -9,6 +9,10 @@
   row-gap: 15px;
   padding: 30px;
   place-items: center;
+
+  @media (max-width: 600px) {
+    grid-template-columns: auto;
+  }
 }
 
 .producto {
@@ -46,7 +50,7 @@
   margin: 10px;
 }
 
-.form-agregar{
+.form-agregar {
   display: grid;
   grid-template-columns: 1fr;
   place-items: center;

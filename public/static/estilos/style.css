@@ -152,26 +152,6 @@ header {
   justify-items: center;
 }
 
-#sobre-nosotros {
-  text-align: center;
-  margin: auto;
-  width: 60%;
-  padding: 20px;
-}
-
-#sobre-nosotros h2 {
-  font-family: "Titulos";
-}
-
-#sobre-nosotros p {
-  font-size: 16px;
-  
-}
-
-#sobre-nosotros:hover {
-  background-color: rgb(56, 73, 41);
-}
-
 #productos-destacados {
   margin: auto;
   margin-top: 20px;

@@ -109,6 +109,7 @@ export function requerirAutorizacion(req, res, next) {
   const token = req.cookies?.autorizacion;
 
   if (!token) {
+    console.error({error: "No tenés una sesión activa"})
     return res.redirect("/admin/login");
   }
 

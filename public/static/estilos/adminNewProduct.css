@@ -50,3 +50,41 @@
 #vista-previa-imagen[hidden] {
   display: none;
 }
+
+@media (max-width: 768px) {
+
+  #alta-producto {
+    padding: 15px;
+  }
+
+  #alta-producto h2 {
+    font-size: 22px;
+    text-align: center;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  #vista-previa-imagen {
+    max-width: 100%;
+    max-height: 150px;
+  }
+
+  .acciones {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .acciones button {
+    width: 100%;
+  }
+
+  .acciones a {
+    text-align: center;
+  }
+}

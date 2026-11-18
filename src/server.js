@@ -311,7 +311,7 @@ app.post("/carrito", requerirCliente, requerirSinCompraApi, async (req, res) => 
   const item = carrito.find((i) => i.id === id); //busca si ya se agrego el producto al carrito
 
   //si ya existe en el carrito suma las cantidades con tope de 10 (si se pasa devuelve 10)
-  if (item) item.cantidad = Math.min(10, item.cantidad + cantidad);
+  if (item) item.cantidad = cantidad;
   else carrito.push({ id, cantidad });
 
   guardarCarrito(res, carrito); //guarda el carrito
@@ -321,7 +321,15 @@ app.post("/carrito", requerirCliente, requerirSinCompraApi, async (req, res) => 
     await emitirCookieCliente(res, { name: res.locals.cliente.name });
   }
 
-  res.redirect(req.get("referer") || "/productos"); // vuelve a donde estaba
+  // Si la petición viene de fetch, respondemos con JSON
+if (req.get("accept")?.includes("application/json")) {
+  return res.status(200).json({
+    mensaje: "Producto agregado al carrito",
+  });
+}
+
+// Si viene de un formulario tradicional, redirigimos
+return res.redirect(req.get("referer") || "/productos");
 });
 
 app.get("/api/carrito", requerirClienteApi, async (req, res) => {

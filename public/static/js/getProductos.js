@@ -1,6 +1,7 @@
 const PRODS_POR_PAGINA = 9;
 let productos = [];
 let paginaActual = 1;
+let cantidadesCarrito = {};
 
 function rutaApi() {
   const url = window.location.pathname;
@@ -76,13 +77,15 @@ function crearTarjeta(producto) {
   const cantidad = document.createElement("input");
   cantidad.type = "number";
   cantidad.name = "cantidad";
-  cantidad.value = 1;
-  cantidad.min = 1;
+  cantidad.value = cantidad.value = cantidadesCarrito[producto.id] ?? 0;
+  cantidad.min = 0;
   cantidad.max = 10;
 
   const boton = document.createElement("button");
   boton.type = "submit";
-  boton.textContent = "Agregar al carrito";
+  boton.textContent = cantidadesCarrito[producto.id]
+    ? "Actualizar cantidad"
+    : "Agregar al carrito";
 
   formulario.append(inputId, cantidad, boton);
   seccionAgregar.appendChild(formulario);
@@ -141,6 +144,8 @@ async function iniciar() {
   const datos = await traerProductos();
   if (!datos) return;
 
+  await traerCantidadesCarrito();
+
   productos = datos;
   mostrarPagina(leerPaginaUrl());
 }
@@ -155,3 +160,19 @@ document
 window.addEventListener("popstate", () => mostrarPagina(leerPaginaUrl()));
 
 window.getProductos = iniciar;
+
+async function traerCantidadesCarrito() {
+  try {
+    const respuesta = await fetch("/api/carrito");
+
+    if (!respuesta.ok) return;
+
+    const carrito = await respuesta.json();
+
+    carrito.items.forEach((item) => {
+      cantidadesCarrito[item.producto.id] = item.cantidad;
+    });
+  } catch (error) {
+    console.error("Error al consultar el carrito:", error);
+  }
+}

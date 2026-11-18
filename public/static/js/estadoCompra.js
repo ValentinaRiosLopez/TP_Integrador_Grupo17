@@ -18,6 +18,7 @@ async function consultarEstadoCompra(){
             $("li-productos").style.display = "none";
             $("li-carrito").style.display = "none";
             $("productos-destacados").style.display = "none";
+            
             $("li-ticket").style.display = "block";
             $("link-ticket").href = `/ticket?venta=${compra}`;
         }

@@ -114,7 +114,7 @@ export const getVentaPorId = async (req, res) => {
     res.status(200).json({
       id: venta.id,
       nombre_cliente: venta.nombre_cliente,
-      fecha: venta.fecha,
+      fecha: formatearFecha(venta.fecha),
       total: Number(venta.total),
       items: venta.detalles.map((d) => ({
         producto: {

@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-import { envs } from "./env.js";
+import { envs } from "../../config/env.js";
 
 export const connection = new Sequelize(
   envs.db.name,

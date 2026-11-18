@@ -2,11 +2,11 @@ import express from "express";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { envs } from "./config/env.js";
-import { connection } from "./config/db_config.js";
-import Productos from "./modelos/productos.js";
-import Usuarios from "./modelos/usuarios.js";
-import Ventas from "./modelos/ventas.js";
-import DetalleVenta from "./modelos/detalleVenta.js";
+import { connection } from "./ORM/database/db_config.js";
+import Productos from "./ORM/modelos/productos.js";
+import Usuarios from "./ORM/modelos/usuarios.js";
+import Ventas from "./ORM/modelos/ventas.js";
+import DetalleVenta from "./ORM/modelos/detalleVenta.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import bcrypt from "bcrypt";
@@ -18,15 +18,15 @@ import {
   requerirCliente,
   requerirAutorizacion,
   verificarCamposRequeridos,
-  validarSesionActiva, 
-  leerCarrito, 
+  validarSesionActiva,
+  leerCarrito,
   guardarCarrito,
   requerirClienteApi,
   emitirCookieCliente,
   requerirCompra,
   requerirCompraApi,
   guardarModo,
-  leerModo
+  leerModo,
 } from "./middlewares.js";
 import puppeteer from "puppeteer";
 import ejs from "ejs";
@@ -120,6 +120,12 @@ app.get("/ticket/detalle", requerirCliente, requerirCompra, (req, res) => {
   res.redirect(`/ticket/detalle/${res.locals.cliente.compra}`);
 });
 
+app.get("/admin/login", (req, res) => {
+  res.render("admin/login", {
+    titulo: "Login | Administración",
+  });
+});
+
 app.get("/admin/dashboard", requerirAutorizacion, async (req, res) => {
   try {
     const productos = await Productos.findAll({
@@ -140,7 +146,7 @@ app.get("/admin/productos/nuevo", requerirAutorizacion, async (req, res) => {
   res.render("admin/newProduct", {
     titulo: "Productos | Alta",
     modo: "nuevo",
-    productoID: null,
+    productoId: null,
   });
 });
 
@@ -236,23 +242,27 @@ app.get("/api/cliente", (req, res) => {
   });
 });
 
-
 //==== ENDPOINS IMAGENES ====
 
 //guarda imagen en la base de datos
-app.post("/subirImagen", upload.single("imagen"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: "No se subio ninguna imagen" });
-  }
+app.post(
+  "/subirImagen",
+  requerirAutorizacion,
+  upload.single("imagen"),
+  (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ error: "No se subio ninguna imagen" });
+    }
 
-  //aca armo el string del url de la imagen
-  const nombreFile = req.file.filename;
-  const rutaImg = `/public/static/imagenes/${nombreFile}`;
+    //aca armo el string del url de la imagen
+    const nombreFile = req.file.filename;
+    const rutaImg = `/public/static/imagenes/${nombreFile}`;
 
-  //aca añadimos el url al producto
+    //aca añadimos el url al producto
 
-  res.status(201).json({ imagen: rutaImg });
-});
+    res.status(201).json({ imagen: rutaImg });
+  },
+);
 
 //funcion leer carrito
 
@@ -260,7 +270,7 @@ async function detalleCarrito(req) {
   const carrito = leerCarrito(req);
   if (carrito.length === 0) return { items: [], total: 0 };
 
-    const productos = await Productos.findAll({
+  const productos = await Productos.findAll({
     where: { id: carrito.map((i) => i.id), activo: true },
   });
 
@@ -469,12 +479,12 @@ async function crearPDF(ticket) {
   const baseUrl = `http://localhost:${envs.port}`;
 
   const html = await ejs.renderFile(
-      path.join(carpetaRaiz, "views", "ticketDetalle.ejs"),
-      { ticket }
-    );
+    path.join(carpetaRaiz, "views", "ticketDetalle.ejs"),
+    { ticket },
+  );
 
   const htmlConBase = html.replace("<head>", `<head><base href="${baseUrl}/">`);
-  
+
   const navegador = await puppeteer.launch({ headless: true });
 
   try {
@@ -540,77 +550,83 @@ async function obtenerVenta(id) {
   };
 }
 
-app.get("/ticket/detalle/:id", requerirCliente, requerirCompra, async (req, res) => {
-const id = Number(req.params.id);
+app.get(
+  "/ticket/detalle/:id",
+  requerirCliente,
+  requerirCompra,
+  async (req, res) => {
+    const id = Number(req.params.id);
 
-  // solo la compra de esta sesión
-  if (!Number.isInteger(id) || res.locals.cliente.compra !== id) {
-    return res.status(404).send("Compra no encontrada");
-  }
+    // solo la compra de esta sesión
+    if (!Number.isInteger(id) || res.locals.cliente.compra !== id) {
+      return res.status(404).send("Compra no encontrada");
+    }
 
-  try {
+    try {
+      const ticket = await obtenerVenta(id);
+      if (!ticket) {
+        return res.status(404).json({ error: "Venta no encontrada" });
+      }
 
-  const ticket = await obtenerVenta(id);
-  if (!ticket) {
-    return res.status(404).json({ error: "Venta no encontrada" });
-  }
+      res.render("ticketDetalle", { ticket });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error al obtener la compra");
+    }
+  },
+);
 
-  res.render("ticketDetalle", {ticket });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error al obtener la compra");
-  }
-});
+app.get(
+  "/api/ticket/descargar/:id",
+  requerirClienteApi,
+  requerirCompraApi,
+  async (req, res) => {
+    const id = Number(req.params.id);
 
+    if (!Number.isInteger(id)) {
+      return res.status(400).json({ error: "ID inválido" });
+    }
 
-app.get("/api/ticket/descargar/:id",  requerirClienteApi, requerirCompraApi, async (req, res) => {
-  const id = Number(req.params.id);
+    try {
+      const ticket = await obtenerVenta(id);
 
-  if (!Number.isInteger(id)) {
-    return res.status(400).json({ error: "ID inválido" });
-  }
+      if (!ticket) {
+        return res.status(404).json({ error: "Venta no encontrada" });
+      }
 
-  try {
+      const pdf = await crearPDF(ticket);
 
-    const ticket = await obtenerVenta(id);
-
-    if (!ticket){
-      return res.status(404).json({ error: "Venta no encontrada" }); 
-    } 
-
-    const pdf = await crearPDF(ticket);
-    
-
-    res.set({
-      "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="factura-${id}.pdf"`,
-    });
-    res.status(200).send(Buffer.from(pdf)); // Puppeteer devuelve Uint8Array
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "No se pudo generar el PDF" });
-  }  
-});
+      res.set({
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename="factura-${id}.pdf"`,
+      });
+      res.status(200).send(Buffer.from(pdf)); // Puppeteer devuelve Uint8Array
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "No se pudo generar el PDF" });
+    }
+  },
+);
 
 //=====ENDPOINTS MODO======
 
 app.post("/api/modo", (req, res) => {
-  const modos = ["claro","oscuro"];
+  const modos = ["claro", "oscuro"];
 
-  const modo = req.body.modo; 
+  const modo = req.body.modo;
 
   if (!modos.includes(modo)) return res.status(400).send("Modo invalido");
 
   const modoGuardado = leerModo(req);
 
-  if(modoGuardado !== modo){
+  if (modoGuardado !== modo) {
     guardarModo(res, modo);
   }
-  
+
   res.status(200).redirect(req.get("referer") || "/"); // vuelve a donde estaba
 });
 
-app.get("/api/modo", (req, res)=>{
+app.get("/api/modo", (req, res) => {
   try {
     const modo = leerModo(req);
     res.status(200).json(modo);
@@ -619,7 +635,6 @@ app.get("/api/modo", (req, res)=>{
     res.status(500).json({ error: "Error al obtener el modo" });
   }
 });
-
 
 // ENDPOINTS Admin //
 // Alta de usuarios
@@ -932,6 +947,50 @@ app.delete(
 
       return res.status(500).json({
         error: "Error al eliminar el producto",
+      });
+    }
+  },
+);
+
+app.put(
+  "/api/admin/productos/:id/activar",
+  requerirAutorizacion,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+
+      if (!id === null || id <= 0) {
+        return res.status(400).json({
+          error: "ID de producto inválido",
+        });
+      }
+
+      const producto = await Productos.findByPk(id);
+
+      if (!producto) {
+        return res.status(404).json({
+          error: "Producto no encontrado",
+        });
+      }
+
+      if (producto.activo) {
+        return res.status(409).json({
+          error: "El producto ya está activo",
+        });
+      }
+
+      await producto.update({
+        activo: true,
+      });
+
+      return res.status(200).json({
+        mensaje: "Producto disponibilizado correctamente",
+      });
+    } catch (error) {
+      console.error("Error al activar producto:", error);
+
+      return res.status(500).json({
+        error: "Error al activar el producto",
       });
     }
   },

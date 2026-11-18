@@ -22,8 +22,6 @@ formLogin.addEventListener("submit", async (event) => {
 
   loginError.textContent = "";
 
-  console.log(email, password);
-
   try {
     const response = await fetch("/api/admin/login", {
       method: "POST",
@@ -33,7 +31,6 @@ formLogin.addEventListener("submit", async (event) => {
 
     const data = await response.json();
 
-    console.log(data);
     if (!response.ok) {
       loginError.textContent = data.error;
       return;

@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "sequelize";
-import { connection } from "../config/db_config.js";
+import { connection } from "../database/db_config.js";
 
 const Ventas = connection.define(
     "Ventas",

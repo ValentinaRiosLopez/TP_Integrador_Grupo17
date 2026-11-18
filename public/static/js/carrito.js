@@ -188,5 +188,16 @@ async function realizarCompra(){
 }
 
 $("btn-vaciar").addEventListener("click",()=>{ vaciarCarrito() });
-$("btn-comprar").addEventListener("click", ()=>{realizarCompra()})
+$("btn-comprar").addEventListener("click", async ()=>{
+  const { items } = await traerCarrito();
+  
+  if(items.length !== 0){
+    $("modal").showModal();
+  }else{
+    alert("Error carrito vacio.");
+  }
+   
+});
+$("btn-volver").addEventListener("click", ()=>{ $("modal").close(); });
+$("btn-confirmar").addEventListener("click", ()=>{realizarCompra()});
 llenarCarrito();

@@ -12,19 +12,22 @@ import cors from "cors";
 import bcrypt from "bcrypt";
 import multer from "multer";
 import {
-  setearCookieCliente,
+  
   setearCookieDeAutorizacion,
+  requerirAutorizacion,
+  setearCookieCliente,
+  emitirCookieCliente,
   leerCookieCliente,
   requerirCliente,
-  requerirAutorizacion,
+  requerirClienteApi,
   verificarCamposRequeridos,
   validarSesionActiva,
   leerCarrito,
   guardarCarrito,
-  requerirClienteApi,
-  emitirCookieCliente,
   requerirCompra,
   requerirCompraApi,
+  requerirSinCompra, 
+  requerirSinCompraApi,
   guardarModo,
   leerModo,
   validarDatosProducto,
@@ -94,19 +97,19 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(carpetaRaiz, "public/static/", "index.html"));
 });
 
-app.get("/productos", requerirCliente, async (req, res) => {
+app.get("/productos", requerirCliente, requerirSinCompra ,async (req, res) => {
   res.sendFile(path.join(carpetaRaiz, "public/static/", "productos.html"));
 });
 
-app.get("/productos/juegos", requerirCliente, async (req, res) => {
+app.get("/productos/juegos", requerirCliente, requerirSinCompra, async (req, res) => {
   res.sendFile(path.join(carpetaRaiz, "public/static/", "productos.html"));
 });
 
-app.get("/productos/dados", requerirCliente, async (req, res) => {
+app.get("/productos/dados", requerirCliente, requerirSinCompra,async (req, res) => {
   res.sendFile(path.join(carpetaRaiz, "public/static/", "productos.html"));
 });
 
-app.get("/carrito", requerirCliente, (req, res) => {
+app.get("/carrito", requerirCliente, requerirSinCompra,(req, res) => {
   res.sendFile(path.join(carpetaRaiz, "public/static/", "carrito.html"));
 });
 
@@ -167,7 +170,7 @@ app.get(
 
 // ENDPOINTS PRODUCTOS
 
-app.get("/api/productos", requerirClienteApi, async (req, res) => {
+app.get("/api/productos", requerirClienteApi, requerirSinCompraApi,async (req, res) => {
   try {
     const productos = await Productos.findAll({
       where: {
@@ -184,7 +187,7 @@ app.get("/api/productos", requerirClienteApi, async (req, res) => {
   }
 });
 
-app.get("/api/productos/juegos", requerirClienteApi, async (req, res) => {
+app.get("/api/productos/juegos", requerirClienteApi, requerirSinCompraApi, async (req, res) => {
   try {
     const productos = await Productos.findAll({
       where: {
@@ -202,7 +205,7 @@ app.get("/api/productos/juegos", requerirClienteApi, async (req, res) => {
   }
 });
 
-app.get("/api/productos/dados", requerirClienteApi, async (req, res) => {
+app.get("/api/productos/dados", requerirClienteApi, requerirSinCompraApi, async (req, res) => {
   try {
     const productos = await Productos.findAll({
       where: {
@@ -293,7 +296,7 @@ async function detalleCarrito(req) {
 
 //=======ENDPOINTS CARRITO==========
 
-app.post("/carrito", requerirCliente, async (req, res) => {
+app.post("/carrito", requerirCliente, requerirSinCompraApi, async (req, res) => {
   const id = Number(req.body.productoId);
   const cantidad = parseInt(req.body.cantidad) || 1; //si la cantidad es invalida defaultea a 1
 
@@ -333,7 +336,7 @@ app.get("/api/carrito", requerirClienteApi, async (req, res) => {
 });
 
 //actualiza la cantidad
-app.patch("/api/carrito/:id", requerirClienteApi, (req, res) => {
+app.patch("/api/carrito/:id", requerirClienteApi, requerirSinCompraApi,(req, res) => {
   const id = Number(req.params.id);
   const cantidad = Number(req.body?.cantidad);
 
@@ -357,7 +360,7 @@ app.patch("/api/carrito/:id", requerirClienteApi, (req, res) => {
 });
 
 //elimina un producto del carrito
-app.delete("/api/carrito/:id", requerirClienteApi, (req, res) => {
+app.delete("/api/carrito/:id", requerirClienteApi, requerirSinCompraApi, (req, res) => {
   const id = Number(req.params.id);
 
   if (!Number.isInteger(id)) {
@@ -370,12 +373,12 @@ app.delete("/api/carrito/:id", requerirClienteApi, (req, res) => {
 });
 
 //vacia el carrito
-app.delete("/carrito/vaciar", requerirClienteApi, (req, res) => {
+app.delete("/carrito/vaciar", requerirClienteApi, requerirSinCompraApi, (req, res) => {
   res.clearCookie("carrito", { path: "/" });
   res.status(200).json({ ok: true });
 });
 
-app.post("/api/carrito/comprar", requerirClienteApi, async (req, res) => {
+app.post("/api/carrito/comprar", requerirClienteApi, requerirSinCompraApi, async (req, res) => {
   try {
     const { items, total } = await detalleCarrito(req);
 
@@ -431,7 +434,7 @@ Productos.hasMany(DetalleVenta, { foreignKey: "id_producto" });
 
 //====ENDPOINTS TICKET=====
 
-app.get("/api/venta/:id", requerirClienteApi, async (req, res) => {
+app.get("/api/venta/:id", requerirClienteApi, requerirCompraApi, async (req, res) => {
   const id = Number(req.params.id);
 
   if (!Number.isInteger(id)) {

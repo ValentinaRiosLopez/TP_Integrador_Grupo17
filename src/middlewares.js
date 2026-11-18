@@ -26,14 +26,14 @@ export async function setearCookieDeAutorizacion(req, res, next = () => {}) {
 
   const token = await generarJWT({
     id: usuario.id,
-  });
+  }, EXP_COOKIE_AUTORIZACION/1000);
 
   res.cookie("autorizacion", token, {
     path: "/",
     httpOnly: true,
     secure: false,
     sameSite: "Lax",
-    maxAge: 1000 * 60 * 10,
+    maxAge: EXP_COOKIE_AUTORIZACION,
   });
 
   next();
@@ -189,6 +189,21 @@ export function requerirCompraApi(req, res, next) {
   }
   next();
 }
+
+export function requerirSinCompra(req, res, next){
+  if (res.locals.cliente?.compra) {
+    return res.redirect("/");
+  }
+  next(); 
+}
+
+export function requerirSinCompraApi(req, res, next){
+  if (res.locals.cliente?.compra) {
+    return res.status(403).json({ error: "Ya se realizo una compra." });
+  }
+  next(); 
+}
+
 
 //middleware modo claro/oscuro
 

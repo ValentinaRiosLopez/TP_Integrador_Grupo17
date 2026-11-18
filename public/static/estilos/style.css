@@ -153,7 +153,8 @@ header {
 }
 
 #productos-destacados {
-
+  margin: auto;
+  margin-top: 20px;
   text-align: center;
   place-items: center;
 }

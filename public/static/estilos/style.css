@@ -131,24 +131,6 @@ header {
   justify-items: center;
 }
 
-#sobre-nosotros {
-  text-align: center;
-  margin: 10px;
-}
-
-#sobre-nosotros h3 {
-  font-family: "Titulos";
-}
-
-#sobre-nosotros p {
-  font-size: 12px;
-  margin-bottom: 30px;
-}
-
-#sobre-nosotros:hover {
-  background-color: rgb(56, 73, 41);
-}
-
 #productos-destacados {
 
   text-align: center;

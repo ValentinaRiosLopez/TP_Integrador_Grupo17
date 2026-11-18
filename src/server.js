@@ -142,7 +142,7 @@ app.get("/admin/productos/nuevo", requerirAutorizacion, async (req, res) => {
   res.render("admin/newProduct", {
     titulo: "Productos | Alta",
     modo: "nuevo",
-    productoID: null,
+    productoId: null,
   });
 });
 
@@ -241,7 +241,7 @@ app.get("/api/cliente", (req, res) => {
 //==== ENDPOINS IMAGENES ====
 
 //guarda imagen en la base de datos
-app.post("/subirImagen", upload.single("imagen"), (req, res) => {
+app.post("/subirImagen", requerirAutorizacion, upload.single("imagen"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No se subio ninguna imagen" });
   }

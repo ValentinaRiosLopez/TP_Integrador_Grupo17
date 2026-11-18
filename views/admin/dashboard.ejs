@@ -31,7 +31,8 @@
               Agregar producto +
           </button>
         </div>
-        <table id="tabla-productos">
+        <div class="tabla-responsive">
+          <table id="tabla-productos">
           <thead>
             <tr>
               <th>ID</th>
@@ -48,9 +49,9 @@
           <tbody>
             <% productos.forEach((producto) => { %>
               <tr>
-                <td><%= producto.id %></td>
+                <td data-label="Producto #"><%= producto.id %></td>
 
-                <td>
+                <td data-label="Imagen">
                   <% if (producto.imagen) { %>
                     <img
                       class="imagen-producto"
@@ -62,22 +63,22 @@
                   <% } %>
                 </td>
 
-                <td><%= producto.nombre %></td>
-                <td><%= producto.categoria %></td>
-                <td><%= producto.tipo %></td>
+                <td data-label="Nombre"><%= producto.nombre %></td>
+                <td data-label="Categoria"><%= producto.categoria %></td>
+                <td data-label="Tipo"><%= producto.tipo %></td>
 
-                <td>
+                <td data-label="Precio">
                   $<%= Number(producto.precio).toLocaleString("es-AR") %>
                 </td>
 
-                <td>
+                <td data-label="Estado">
                   <% if (producto.activo) { %>
                     <span class="estado-activo">Activo</span>
                   <% } else { %>
                     <span class="estado-inactivo">Inactivo</span>
                   <% } %>
                 </td>
-                <td>
+                <td data-label="Acciones">
                   <div class="btn-acciones">
                   <button
                     type="button"
@@ -110,7 +111,8 @@
               </tr>
             <% }); %>
           </tbody>
-        </table>
+          </table>
+        </div>
 
         <dialog id="modal-confirmacion">
         <h3 id="titulo-modal"></h3>

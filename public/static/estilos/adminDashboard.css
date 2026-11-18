@@ -146,3 +146,60 @@ body {
   color: white;
 }
 
+@media (max-width: 768px) {
+
+  .encabezado-productos {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  #btn-agregar-producto {
+    width: 100%;
+  }
+
+  #tabla-productos {
+    width: 100%;
+    min-width: 0;
+  }
+
+  #tabla-productos thead {
+    display: none;
+  }
+
+  #tabla-productos tbody,
+  #tabla-productos tr {
+    display: block;
+  }
+
+  #tabla-productos tr {
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+
+  #tabla-productos td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    text-align: right;
+  }
+
+  /* ::before: crea un pseudoelemento al comienzo del contenido de cada celda. */ 
+  #tabla-productos td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    text-align: left;
+  }
+
+  .btn-acciones {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .imagen-producto {
+    width: 50px;
+    height: 50px;
+  }
+}
